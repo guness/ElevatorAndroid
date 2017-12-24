@@ -1,0 +1,10 @@
+package com.guness.elevator.model
+
+/**
+ * Created by guness on 24.12.2017.
+ */
+class Group {
+    var id: Int = 0
+    var description: String? = null
+    var elevators: Array<Elevator>? = null
+}

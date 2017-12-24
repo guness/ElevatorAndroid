@@ -7,7 +7,8 @@ import android.os.IBinder
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.guness.elevator.Constants.WS_HOST
-import com.guness.elevator.model.*
+import com.guness.elevator.message.*
+import com.guness.elevator.model.Fetch
 import com.guness.utils.RuntimeTypeAdapterFactory
 import okhttp3.*
 import timber.log.Timber
@@ -21,7 +22,6 @@ class BackgroundService : Service() {
     private var mWS: WebSocket? = null
 
     init {
-
         mBinder = LocalBinder()
 
         mClient = OkHttpClient.Builder()
@@ -33,9 +33,9 @@ class BackgroundService : Service() {
                             .build()
                 }
                 .build()
-
-        val rta = RuntimeTypeAdapterFactory.of(AbstractModel::class.java, "_type")
+        val rta = RuntimeTypeAdapterFactory.of(AbstractMessage::class.java, "_type")
                 .registerSubtype(Echo::class.java)
+                .registerSubtype(FetchInfo::class.java)
                 .registerSubtype(ListenDevice::class.java)
                 .registerSubtype(RelayOrder::class.java)
                 .registerSubtype(RelayOrderResponse::class.java)
@@ -48,21 +48,18 @@ class BackgroundService : Service() {
 
     private val mWebSocketListener = object : WebSocketListener() {
         override fun onMessage(webSocket: WebSocket?, text: String?) {
-            Timber.e("onMessage: " + text);
+            Timber.e("onMessage: " + text)
         }
 
-        override fun onClosed(webSocket: WebSocket?, code: Int, reason: String?) {
-            super.onClosed(webSocket, code, reason)
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String?) {
             Timber.e("onClosed reason: " + reason)
         }
 
-        override fun onOpen(webSocket: WebSocket?, response: Response?) {
-            super.onOpen(webSocket, response)
+        override fun onOpen(webSocket: WebSocket, response: Response?) {
             Timber.e("onOpen response: " + response)
         }
 
         override fun onFailure(webSocket: WebSocket?, t: Throwable?, response: Response?) {
-            super.onFailure(webSocket, t, response)
             Timber.e("onFailure response: $response by: $t")
         }
     }
@@ -75,16 +72,18 @@ class BackgroundService : Service() {
                 .build()
 
         mWS = mClient.newWebSocket(request, mWebSocketListener)
-
-        sendPacket(ListenDevice("sinan"))
+        val fetch = Fetch()
+        fetch.type = Fetch.TYPE_GROUP
+        fetch.id = 1
+        sendPacket(FetchInfo(fetch))
     }
 
     override fun onBind(intent: Intent): IBinder? {
         return mBinder
     }
 
-    private fun sendPacket(data: AbstractModel) {
-        mWS!!.send(mGson.toJson(data, AbstractModel::class.java))
+    private fun sendPacket(data: AbstractMessage) {
+        mWS!!.send(mGson.toJson(data, AbstractMessage::class.java))
     }
 
     inner class LocalBinder : Binder() {

@@ -1,8 +1,8 @@
-package com.guness.elevator.model
+package com.guness.elevator.message
 
 /**
  * Created by guness on 24.12.2017.
  */
-class Echo : AbstractModel() {
+class Echo : AbstractMessage() {
     var echo: HashMap<String, Any>? = null
 }
