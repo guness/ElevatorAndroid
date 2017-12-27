@@ -2,6 +2,7 @@ package com.guness.elevator.db
 
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
+import io.reactivex.Single
 
 
 /**
@@ -24,6 +25,9 @@ abstract class AppDao {
 
     @Delete
     abstract fun delete(group: GroupEntity)
+
+    @Query("SELECT * FROM $TABLE_ELEVATOR WHERE device = :device")
+    abstract fun getElevator(device: String): Single<ElevatorEntity>
 
     @Transaction
     open fun insertGroup(group: GroupEntity, elevators: List<ElevatorEntity>) {

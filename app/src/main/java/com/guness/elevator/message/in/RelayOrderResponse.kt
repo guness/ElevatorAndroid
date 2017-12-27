@@ -8,4 +8,5 @@ import com.guness.elevator.model.Order
  */
 class RelayOrderResponse : AbstractMessage() {
     var order: Order? = null
+    var success = false
 }

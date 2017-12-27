@@ -2,6 +2,7 @@ package com.guness.elevator.db
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import com.guness.elevator.model.Elevator
 
@@ -9,6 +10,7 @@ import com.guness.elevator.model.Elevator
  * Created by guness on 18.12.2017.
  */
 @Entity(tableName = AppDao.TABLE_ELEVATOR,
+        indices = [Index("groupId")],
         foreignKeys = [(ForeignKey(entity = GroupEntity::class,
                 parentColumns = ["id"],
                 childColumns = ["groupId"],

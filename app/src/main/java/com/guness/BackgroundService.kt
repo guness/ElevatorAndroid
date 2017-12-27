@@ -19,6 +19,7 @@ import com.guness.elevator.model.ElevatorState
 import com.guness.elevator.model.Fetch
 import com.guness.elevator.model.Order
 import com.guness.utils.RuntimeTypeAdapterFactory
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.*
 import timber.log.Timber
@@ -32,6 +33,12 @@ class BackgroundService : Service() {
     private var mWS: WebSocket? = null
     private val mStateObservable: BehaviorSubject<ElevatorState> = BehaviorSubject.create()
     private val mOrderResponseObservable: BehaviorSubject<RelayOrderResponse> = BehaviorSubject.create()
+
+    val stateObservable: Observable<ElevatorState>
+        get() = mStateObservable
+
+    val orderObservable: Observable<RelayOrderResponse>
+        get() = mOrderResponseObservable
 
     init {
 
@@ -130,11 +137,6 @@ class BackgroundService : Service() {
         val deviceUUID = "UUID-0000-000-001"
 
         sendPacket(ListenDevice(deviceUUID))
-
-        val order = Order()
-        order.floor = 6
-        order.device = deviceUUID
-        //sendPacket(RelayOrder(order))
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -143,6 +145,13 @@ class BackgroundService : Service() {
 
     private fun sendPacket(data: AbstractMessage) {
         mWS!!.send(mGson.toJson(data, AbstractMessage::class.java))
+    }
+
+    fun sendRelayOrder(device: String, floor: Int) {
+        val order = Order()
+        order.floor = floor
+        order.device = device
+        sendPacket(RelayOrder(order))
     }
 
     inner class LocalBinder : Binder() {
