@@ -1,15 +1,22 @@
 package com.guness.elevator.model
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * Created by guness on 24.12.2017.
  */
 class Elevator {
-    var id: Int = 0
+    var id: Long = 0
     var device: String = ""
-    var min_floor: Int = 0
-    var floor_count: Int = 0
+
+    @SerializedName("min_floor")
+    var minFloor: Int = 0
+
+    @SerializedName("floor_count")
+    var floorCount: Int = 0
+
     var address: String? = null
     var description: String? = null
-    var latitude: Float? = null
-    var longitude: Float? = null
+    var latitude: Double? = null
+    var longitude: Double? = null
 }

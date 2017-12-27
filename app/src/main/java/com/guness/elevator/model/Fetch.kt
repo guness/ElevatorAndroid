@@ -12,7 +12,6 @@ class Fetch {
     var type: String = ""
     var id: Int = 0
 
-
     @Retention(AnnotationRetention.SOURCE)
     @StringDef(TYPE_GROUP)
     annotation class InfoTypeDef

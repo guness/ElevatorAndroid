@@ -1,5 +1,6 @@
-package com.guness.elevator.message
+package com.guness.elevator.message.out
 
+import com.guness.elevator.message.AbstractMessage
 import com.guness.elevator.model.Fetch
 
 /**
