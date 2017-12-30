@@ -15,7 +15,7 @@ abstract class AppDao {
     abstract fun getSettingsFor(key: String): String?
 
     @Insert(onConflict = REPLACE)
-    abstract fun setSettings(settings: SettingsEntity)
+    abstract fun putSettings(settings: SettingsEntity)
 
     @Insert(onConflict = REPLACE)
     abstract fun insert(elevators: List<ElevatorEntity>)

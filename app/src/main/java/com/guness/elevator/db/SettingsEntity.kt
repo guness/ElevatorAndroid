@@ -12,4 +12,8 @@ class SettingsEntity(val key: String, val value: String) {
 
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
+
+    companion object {
+        const val UUID = "uuid"
+    }
 }

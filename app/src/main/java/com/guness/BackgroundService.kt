@@ -4,12 +4,14 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.guness.core.SGApplication
 import com.guness.elevator.Constants.WS_HOST
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.GroupEntity
+import com.guness.elevator.db.SettingsEntity
 import com.guness.elevator.message.AbstractMessage
 import com.guness.elevator.message.`in`.GroupInfo
 import com.guness.elevator.message.`in`.RelayOrderResponse
@@ -20,15 +22,19 @@ import com.guness.elevator.model.Fetch
 import com.guness.elevator.model.Order
 import com.guness.utils.RuntimeTypeAdapterFactory
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.*
 import timber.log.Timber
+import java.util.*
 
 
 class BackgroundService : Service() {
 
     private val mBinder: Binder
-    private val mClient: OkHttpClient
+    private var mClient: OkHttpClient? = null
     private val mGson: Gson
     private var mWS: WebSocket? = null
     private val mStateObservable: BehaviorSubject<ElevatorState> = BehaviorSubject.create()
@@ -44,15 +50,6 @@ class BackgroundService : Service() {
 
         mBinder = LocalBinder()
 
-        mClient = OkHttpClient.Builder()
-                .authenticator { _, response ->
-                    val credential = Credentials.basic("Sinan", "Gunes")
-                    response.request()
-                            .newBuilder()
-                            .header("Authorization", credential)
-                            .build()
-                }
-                .build()
         val rta = RuntimeTypeAdapterFactory.of(AbstractMessage::class.java, "_type")
                 .registerSubtype(Echo::class.java)
                 .registerSubtype(FetchInfo::class.java)
@@ -124,19 +121,46 @@ class BackgroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         Timber.e("Starting Service")
-        val request = Request.Builder()
-                .url(WS_HOST)
-                .build()
 
-        mWS = mClient.newWebSocket(request, mWebSocketListener)
-        val fetch = Fetch()
-        fetch.type = Fetch.TYPE_GROUP
-        fetch.id = 1
-        sendPacket(FetchInfo(fetch))
+        getUUID()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .subscribe(Consumer {
+                    val token = FirebaseInstanceId.getInstance().token ?: "NULL"
+                    val request = Request.Builder()
+                            .url(WS_HOST)
+                            .build()
+                    mClient = OkHttpClient.Builder()
+                            .authenticator { _, response ->
+                                val credential = Credentials.basic(it, token)
+                                response.request()
+                                        .newBuilder()
+                                        .header("Authorization", credential)
+                                        .build()
+                            }
+                            .build()
+                    mWS = mClient!!.newWebSocket(request, mWebSocketListener)
 
-        val deviceUUID = "UUID-0000-000-001"
+                    val fetch = Fetch()
+                    fetch.type = Fetch.TYPE_GROUP
+                    fetch.id = 1
+                    sendPacket(FetchInfo(fetch))
 
-        sendPacket(ListenDevice(deviceUUID))
+                    val deviceUUID = "UUID-0000-000-001"
+
+                    sendPacket(ListenDevice(deviceUUID))
+                })
+    }
+
+    private fun getUUID(): Single<String> {
+        return Single.fromCallable {
+            val dao = (application as SGApplication).getDatabase().dao()
+            dao.getSettingsFor(SettingsEntity.UUID) ?: {
+                val uuid = UUID.randomUUID().toString()
+                dao.putSettings(SettingsEntity(SettingsEntity.UUID, uuid))
+                uuid
+            }.invoke()
+        }
     }
 
     override fun onBind(intent: Intent): IBinder? {
