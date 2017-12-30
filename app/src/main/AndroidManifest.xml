@@ -21,7 +21,9 @@
         </activity>
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.info.InfoActivity" />
-        <activity android:name=".ui.panel.PanelActivity" />
+        <activity
+            android:name=".ui.panel.PanelActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent.Bars" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
