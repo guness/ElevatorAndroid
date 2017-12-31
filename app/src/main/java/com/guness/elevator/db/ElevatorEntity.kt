@@ -20,7 +20,7 @@ class ElevatorEntity {
     @PrimaryKey
     var id: Long = 0
     var device: String = ""
-    var groupId: Long? = null
+    var groupId: Long = 0
     var minFloor: Int = 0
     var floorCount: Int = 0
     var address: String? = null
@@ -30,7 +30,7 @@ class ElevatorEntity {
 
     companion object {
 
-        fun fromElevator(elevator: Elevator, groupId: Long?): ElevatorEntity {
+        fun fromElevator(elevator: Elevator, groupId: Long): ElevatorEntity {
             val entity = ElevatorEntity()
             entity.id = elevator.id
             entity.device = elevator.device

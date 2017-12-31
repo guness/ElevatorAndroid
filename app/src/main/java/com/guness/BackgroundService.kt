@@ -26,6 +26,7 @@ import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import okhttp3.*
 import timber.log.Timber
 import java.util.*
@@ -38,7 +39,7 @@ class BackgroundService : Service() {
     private val mGson: Gson
     private var mWS: WebSocket? = null
     private val mStateObservable: BehaviorSubject<ElevatorState> = BehaviorSubject.create()
-    private val mOrderResponseObservable: BehaviorSubject<RelayOrderResponse> = BehaviorSubject.create()
+    private val mOrderResponseObservable: PublishSubject<RelayOrderResponse> = PublishSubject.create()
 
     val stateObservable: Observable<ElevatorState>
         get() = mStateObservable

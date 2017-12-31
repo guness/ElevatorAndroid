@@ -20,15 +20,20 @@ class PanelActivity : SGActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_panel)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         mAdapter = PanelAdapter()
         listView.adapter = mAdapter
         listView.setHasFixedSize(true)
 
         mViewModel = ViewModelProviders.of(this).get(PanelViewModel::class.java)
-        mViewModel.device = "UUID-0000-000-001"
+        mViewModel.device = intent.getStringExtra(EXTRA_UUID)
         mViewModel.entity.observe(this, Observer {
+            title = it?.description
             mAdapter.setElevator(it)
+            listView.scrollToPosition(0)
         })
         mViewModel.elevatorState.observe(this, Observer {
             sevenSegment.text = when {
@@ -49,8 +54,10 @@ class PanelActivity : SGActivity() {
     }
 
     companion object {
-        fun newIntent(context: Context): Intent {
+        private const val EXTRA_UUID = "uuid"
+        fun newIntent(context: Context, uuid: String): Intent {
             return Intent(context, PanelActivity::class.java)
+                    .putExtra(EXTRA_UUID, uuid)
         }
     }
 }

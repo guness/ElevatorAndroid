@@ -31,13 +31,12 @@ abstract class SGViewModel(application: Application) : AndroidViewModel(applicat
     protected var mProgressDialogVisibility = MutableLiveData<Boolean>()
 
     @SuppressLint("StaticFieldLeak")
-    var mService: BackgroundService? = null
-    var mServiceBound = false
+    protected var service: BackgroundService? = null
+    private var mServiceBound = false
 
-    override fun onServiceConnected(className: ComponentName, service: IBinder) {
+    override fun onServiceConnected(className: ComponentName, binder: IBinder) {
         // We've bound to LocalService, cast the IBinder and get LocalService instance
-        val binder = service as LocalBinder
-        mService = binder.service
+        service = (binder as LocalBinder).service
         mServiceBound = true
     }
 
@@ -91,7 +90,7 @@ abstract class SGViewModel(application: Application) : AndroidViewModel(applicat
         return getApp()
     }
 
-    fun getApp(): SGApplication {
+    protected fun getApp(): SGApplication {
         return getApplication()
     }
 }

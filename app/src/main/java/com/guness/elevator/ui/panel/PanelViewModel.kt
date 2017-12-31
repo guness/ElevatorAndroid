@@ -13,6 +13,7 @@ import com.guness.core.SGViewModel
 import com.guness.elevator.R
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.model.ElevatorState
+import com.guness.utils.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit
 class PanelViewModel(application: Application) : SGViewModel(application) {
     var entity: MutableLiveData<ElevatorEntity> = MutableLiveData()
     var elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
-    var elevatorError: MutableLiveData<String> = MutableLiveData()
+    var elevatorError: MutableLiveData<String> = SingleLiveEvent()
 
     var device: String? = null
     private var mSound: SoundPool? = null
@@ -49,17 +50,17 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
         createSoundPool()
     }
 
-    override fun onServiceConnected(className: ComponentName, service: IBinder) {
-        super.onServiceConnected(className, service)
+    override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+        super.onServiceConnected(className, binder)
 
-        subscribeUntilDetach(mService!!.stateObservable
+        subscribeUntilDetach(service!!.stateObservable
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     elevatorState.value = it
                 })
 
-        subscribeUntilDetach(mService!!.orderObservable
+        subscribeUntilDetach(service!!.orderObservable
                 .map {
                     elevatorError.postValue(if (it.success) {
                         ""
@@ -71,7 +72,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delay(2000, TimeUnit.MILLISECONDS)
-                .subscribe({ elevatorError.postValue(it) }))
+                .subscribe { elevatorError.postValue(it) })
     }
 
     private fun createSoundPool() {
@@ -102,7 +103,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     fun onFloorSelected(floor: Int) {
         if (device != null) {
             mSound?.play(mClickSound, 1f, 1f, 1, 0, 1f)
-            mService?.sendRelayOrder(device!!, floor)
+            service?.sendRelayOrder(device!!, floor)
         }
     }
 }

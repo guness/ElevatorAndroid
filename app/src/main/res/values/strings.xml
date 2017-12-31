@@ -3,4 +3,9 @@
     <string name="plus_sign">+</string>
     <string name="panel_off">OFF</string>
     <string name="service_failed">Service Failed</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="add_new">Add new elevators</string>
+    <string name="delete_group">Delete group</string>
 </resources>

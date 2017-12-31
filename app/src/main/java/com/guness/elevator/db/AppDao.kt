@@ -1,5 +1,6 @@
 package com.guness.elevator.db
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import io.reactivex.Single
@@ -29,6 +30,9 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_ELEVATOR WHERE device = :device")
     abstract fun getElevator(device: String): Single<ElevatorEntity>
 
+    @Query("SELECT * FROM $TABLE_GROUP")
+    abstract fun getAllDevices(): LiveData<List<GroupWithDevices>>
+
     @Transaction
     open fun insertGroup(group: GroupEntity, elevators: List<ElevatorEntity>) {
         delete(group)
@@ -39,8 +43,9 @@ abstract class AppDao {
     }
 
     companion object {
-        const val TABLE_ELEVATOR = "elevator"
-        const val TABLE_GROUP = "group"
-        const val TABLE_SETTINGS = "settings"
+        private const val PREFIX = "a_"
+        const val TABLE_ELEVATOR = PREFIX + "elevator"
+        const val TABLE_GROUP = PREFIX + "group"
+        const val TABLE_SETTINGS = PREFIX + "settings"
     }
 }
