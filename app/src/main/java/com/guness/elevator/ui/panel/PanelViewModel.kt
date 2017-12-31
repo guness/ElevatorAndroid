@@ -16,6 +16,7 @@ import com.guness.elevator.model.ElevatorState
 import com.guness.utils.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -28,51 +29,69 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     var elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
     var elevatorError: MutableLiveData<String> = SingleLiveEvent()
 
-    var device: String? = null
+    private var device: BehaviorSubject<String> = BehaviorSubject.create()
+
     private var mSound: SoundPool? = null
     private var mClickSound = 0
 
     override fun onStart() {
         super.onStart()
-        if (device != null) {
-            getApp().getDatabase()
-                    .dao()
-                    .getElevator(device!!)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        entity.value = it
-                    }, {
-                        entity.value = null
-                        Timber.e(it, "Error fetching elevator")
-                    })
-        }
+        device.take(1)
+                .subscribe { uuid ->
+                    getApp().getDatabase()
+                            .dao()
+                            .getElevator(uuid)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                entity.value = it
+                            }, {
+                                entity.value = null
+                                Timber.e(it, "Error fetching elevator")
+                            })
+                }
+
         createSoundPool()
     }
 
     override fun onServiceConnected(className: ComponentName, binder: IBinder) {
         super.onServiceConnected(className, binder)
 
-        subscribeUntilDetach(service!!.stateObservable
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    elevatorState.value = it
-                })
+        device.take(1)
+                .subscribe { uuid ->
+                    subscribeUntilDetach(service!!.stateObservable
+                            .filter { it.device == uuid }
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe {
+                                elevatorState.value = it
+                            })
 
-        subscribeUntilDetach(service!!.orderObservable
-                .map {
-                    elevatorError.postValue(if (it.success) {
-                        ""
-                    } else {
-                        getAppContext().getString(R.string.service_failed)
-                    })
-                    ""
+                    subscribeUntilDetach(service!!.orderObservable
+                            .filter { it.order?.device == uuid }
+                            .map {
+                                elevatorError.postValue(if (it.success) {
+                                    ""
+                                } else {
+                                    getAppContext().getString(R.string.service_failed)
+                                })
+                                ""
+                            }
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .delay(2000, TimeUnit.MILLISECONDS)
+                            .subscribe { elevatorError.postValue(it) })
+
+                    service!!.sendListenDevice(uuid)
                 }
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .delay(2000, TimeUnit.MILLISECONDS)
-                .subscribe { elevatorError.postValue(it) })
+    }
+
+    override fun onStop() {
+        super.onStop()
+        device.take(1)
+                .subscribe { uuid ->
+                    service!!.sendStopListenDevice(uuid)
+                }
     }
 
     private fun createSoundPool() {
@@ -101,9 +120,14 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     }
 
     fun onFloorSelected(floor: Int) {
-        if (device != null) {
+        val uuid = device.value
+        if (uuid != null) {
             mSound?.play(mClickSound, 1f, 1f, 1, 0, 1f)
-            service?.sendRelayOrder(device!!, floor)
+            service?.sendRelayOrder(uuid, floor)
         }
+    }
+
+    fun setDevice(uuid: String) {
+        device.onNext(uuid)
     }
 }

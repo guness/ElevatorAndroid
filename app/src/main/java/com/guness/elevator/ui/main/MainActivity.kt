@@ -35,6 +35,7 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
         mViewModel.groups.observe(this, Observer { list ->
             val menu = nav_view.menu
             menu.clear()
+
             list?.forEach {
                 val group = it.group!!
                 val groupId = group.id.toInt()
@@ -44,12 +45,12 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
                             .setIcon(R.drawable.ic_elevator)
                 }
             }
-            menu.add(Menu.NONE, Menu.NONE, Menu.FIRST, R.string.add_new)
+            menu.add(Menu.NONE, 0, Menu.FIRST, R.string.add_new)
                     .setIcon(R.drawable.ic_playlist_add)
                     .setOnMenuItemClickListener {
                         mViewModel.onAddElevatorClicked()
                     }
-            menu.add(Menu.NONE, Menu.NONE, Menu.FIRST + 1, R.string.delete_group)
+            menu.add(Menu.NONE, 0, Menu.FIRST + 1, R.string.delete_group)
                     .setIcon(R.drawable.ic_delete_sweep)
                     .setOnMenuItemClickListener {
                         mViewModel.onDeleteElevatorClicked()

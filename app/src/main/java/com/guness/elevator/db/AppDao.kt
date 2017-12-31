@@ -33,6 +33,9 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getAllDevices(): LiveData<List<GroupWithDevices>>
 
+    @Query("SELECT * FROM $TABLE_GROUP")
+    abstract fun getGroups(): Single<List<GroupEntity>>
+
     @Transaction
     open fun insertGroup(group: GroupEntity, elevators: List<ElevatorEntity>) {
         delete(group)

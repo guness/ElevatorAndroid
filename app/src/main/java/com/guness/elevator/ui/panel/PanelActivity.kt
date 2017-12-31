@@ -29,7 +29,7 @@ class PanelActivity : SGActivity() {
         listView.setHasFixedSize(true)
 
         mViewModel = ViewModelProviders.of(this).get(PanelViewModel::class.java)
-        mViewModel.device = intent.getStringExtra(EXTRA_UUID)
+        mViewModel.setDevice(intent.getStringExtra(EXTRA_UUID))
         mViewModel.entity.observe(this, Observer {
             title = it?.description
             mAdapter.setElevator(it)

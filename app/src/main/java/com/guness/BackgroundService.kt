@@ -25,11 +25,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import okhttp3.*
+import okhttp3.internal.ws.RealWebSocket
 import timber.log.Timber
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class BackgroundService : Service() {
@@ -37,8 +38,8 @@ class BackgroundService : Service() {
     private val mBinder: Binder
     private var mClient: OkHttpClient? = null
     private val mGson: Gson
-    private var mWS: WebSocket? = null
-    private val mStateObservable: BehaviorSubject<ElevatorState> = BehaviorSubject.create()
+    private var mWS: RealWebSocket? = null
+    private val mStateObservable: PublishSubject<ElevatorState> = PublishSubject.create()
     private val mOrderResponseObservable: PublishSubject<RelayOrderResponse> = PublishSubject.create()
 
     val stateObservable: Observable<ElevatorState>
@@ -48,18 +49,19 @@ class BackgroundService : Service() {
         get() = mOrderResponseObservable
 
     init {
-
         mBinder = LocalBinder()
 
         val rta = RuntimeTypeAdapterFactory.of(AbstractMessage::class.java, "_type")
+                .registerSubtype(GroupInfo::class.java)
+                .registerSubtype(RelayOrderResponse::class.java)
+                .registerSubtype(UpdateState::class.java)
+
                 .registerSubtype(Echo::class.java)
                 .registerSubtype(FetchInfo::class.java)
-                .registerSubtype(GroupInfo::class.java)
                 .registerSubtype(ListenDevice::class.java)
                 .registerSubtype(RelayOrder::class.java)
-                .registerSubtype(RelayOrderResponse::class.java)
                 .registerSubtype(StopListening::class.java)
-                .registerSubtype(UpdateState::class.java)
+
         mGson = GsonBuilder()
                 .registerTypeAdapterFactory(rta)
                 .create()
@@ -112,10 +114,35 @@ class BackgroundService : Service() {
             if (response.code() != 101) {
                 Timber.e("onOpen response: " + response)
             }
+            (application as SGApplication).getDatabase()
+                    .dao()
+                    .getGroups()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
+                    .subscribe({ groups ->
+                        groups.forEach {
+                            val fetch = Fetch()
+                            fetch.type = Fetch.TYPE_GROUP
+                            fetch.id = it.id
+                            sendPacket(FetchInfo(fetch))
+                        }
+                    }, {
+                        Timber.e(it, "Error fetching groups")
+                    })
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             Timber.e("onFailure response: $response by: $t")
+            synchronized(this) {
+                if (mWS == webSocket) {
+                    mWS = newWebSocket()
+                    Single.just(mWS)
+                            .delay(10000, TimeUnit.MILLISECONDS)
+                            .subscribe(Consumer {
+                                mWS!!.connect(mClient)
+                            })
+                }
+            }
         }
     }
 
@@ -128,10 +155,8 @@ class BackgroundService : Service() {
                 .observeOn(Schedulers.computation())
                 .subscribe(Consumer {
                     val token = FirebaseInstanceId.getInstance().token ?: "NULL"
-                    val request = Request.Builder()
-                            .url(WS_HOST)
-                            .build()
                     mClient = OkHttpClient.Builder()
+                            .pingInterval(60000, TimeUnit.MILLISECONDS)
                             .authenticator { _, response ->
                                 val credential = Credentials.basic(it, token)
                                 response.request()
@@ -140,17 +165,16 @@ class BackgroundService : Service() {
                                         .build()
                             }
                             .build()
-                    mWS = mClient!!.newWebSocket(request, mWebSocketListener)
-
-                    val fetch = Fetch()
-                    fetch.type = Fetch.TYPE_GROUP
-                    fetch.id = 1
-                    sendPacket(FetchInfo(fetch))
-
-                    val deviceUUID = "UUID-0000-000-001"
-
-                    sendPacket(ListenDevice(deviceUUID))
+                    mWS = newWebSocket()
+                    mWS!!.connect(mClient)
                 })
+    }
+
+    private fun newWebSocket(): RealWebSocket {
+        val request = Request.Builder()
+                .url(WS_HOST)
+                .build()
+        return RealWebSocket(request, mWebSocketListener, Random())
     }
 
     private fun getUUID(): Single<String> {
@@ -177,6 +201,14 @@ class BackgroundService : Service() {
         order.floor = floor
         order.device = device
         sendPacket(RelayOrder(order))
+    }
+
+    fun sendListenDevice(device: String) {
+        sendPacket(ListenDevice(device))
+    }
+
+    fun sendStopListenDevice(device: String) {
+        sendPacket(StopListening(device))
     }
 
     inner class LocalBinder : Binder() {
