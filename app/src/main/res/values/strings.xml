@@ -8,4 +8,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="add_new">Add new elevators</string>
     <string name="delete_group">Delete group</string>
+    <string name="click_to_add_elevator">New Elevator</string>
+    <string name="click_to_add_floor">New Floor</string>
 </resources>

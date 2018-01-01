@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent.Status" />
         <activity android:name=".ui.info.InfoActivity" />
         <activity
             android:name=".ui.panel.PanelActivity"
