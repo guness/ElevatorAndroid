@@ -41,11 +41,16 @@ class PanelActivity : SGActivity() {
                 it.online -> it.floor.toString()
                 else -> getString(R.string.panel_off)
             }
+            if (it?.online != true) {
+                mAdapter.onButtonSelected(null)
+            }
         })
         mViewModel.elevatorError.observe(this, Observer {
             errorView.text = it
         })
-
+        mViewModel.buttonPressed.observe(this, Observer {
+            mAdapter.onButtonSelected(it)
+        })
         mAdapter.listener = object : FloorClickedListener {
             override fun onClick(floor: Int) {
                 mViewModel.onFloorSelected(floor)

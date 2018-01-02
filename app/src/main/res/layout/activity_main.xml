@@ -46,7 +46,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -55,27 +55,42 @@
                 android:layout_marginStart="16dp"
                 android:background="@drawable/metallic_border_radius_16"
                 android:gravity="end"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/button3"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_elevator" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|end"
+                    android:text="@string/click_to_add_elevator"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button1b"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
+                    android:id="@+id/button1b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/elevator_button"
                     android:soundEffectsEnabled="false"
-                    android:textSize="24sp" />
-            </LinearLayout>
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -83,30 +98,44 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/metallic_border_radius_16"
-                android:gravity="start"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/button4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline_vertical">
 
                 <Button
+                    android:id="@+id/button2b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/button"
                     android:soundEffectsEnabled="false"
                     android:text="@string/plus_sign"
                     android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="10" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_floor" />
-            </LinearLayout>
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|start"
+                    android:text="@string/click_to_add_floor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/button2b"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -115,27 +144,42 @@
                 android:layout_marginStart="16dp"
                 android:background="@drawable/metallic_border_radius_16"
                 android:gravity="end"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_elevator" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|end"
+                    android:text="@string/click_to_add_elevator"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button3b"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
+                    android:id="@+id/button3b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/elevator_button"
                     android:soundEffectsEnabled="false"
-                    android:textSize="24sp" />
-            </LinearLayout>
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -143,30 +187,44 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/metallic_border_radius_16"
-                android:gravity="start"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline_vertical">
 
                 <Button
+                    android:id="@+id/button4b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/button"
                     android:soundEffectsEnabled="false"
                     android:text="@string/plus_sign"
                     android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="10" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_floor" />
-            </LinearLayout>
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|start"
+                    android:text="@string/click_to_add_floor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/button4b"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -174,56 +232,85 @@
                 android:layout_marginStart="16dp"
                 android:background="@drawable/metallic_border_radius_16"
                 android:gravity="end"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline_horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_elevator" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|end"
+                    android:text="@string/click_to_add_elevator"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button5b"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
+                    android:id="@+id/button5b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/elevator_button"
                     android:soundEffectsEnabled="false"
-                    android:textSize="24sp" />
-            </LinearLayout>
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/metallic_border_radius_16"
-                android:gravity="start"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline_vertical"
                 app:layout_constraintTop_toTopOf="@+id/guideline_horizontal">
 
                 <Button
+                    android:id="@+id/button6b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/button"
                     android:soundEffectsEnabled="false"
                     android:text="@string/plus_sign"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_floor" />
-            </LinearLayout>
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|start"
+                    android:text="@string/click_to_add_floor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/button6b"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button7"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -232,27 +319,42 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/metallic_border_radius_16"
                 android:gravity="end"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button5">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_elevator" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|end"
+                    android:text="@string/click_to_add_elevator"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button7b"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
+                    android:id="@+id/button7b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/elevator_button"
                     android:soundEffectsEnabled="false"
-                    android:textSize="24sp" />
-            </LinearLayout>
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/button8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -260,27 +362,41 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/metallic_border_radius_16"
-                android:gravity="start"
-                android:orientation="horizontal"
                 android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline_vertical"
                 app:layout_constraintTop_toBottomOf="@+id/button6">
 
                 <Button
+                    android:id="@+id/button8b"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/button"
                     android:soundEffectsEnabled="false"
                     android:text="@string/plus_sign"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/click_to_add_floor" />
-            </LinearLayout>
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center|start"
+                    android:text="@string/click_to_add_floor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/button8b"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
     </android.support.design.widget.CoordinatorLayout>

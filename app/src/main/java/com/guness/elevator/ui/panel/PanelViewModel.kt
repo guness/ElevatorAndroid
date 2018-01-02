@@ -25,14 +25,17 @@ import java.util.concurrent.TimeUnit
  * Created by guness on 23.12.2017.
  */
 class PanelViewModel(application: Application) : SGViewModel(application) {
-    var entity: MutableLiveData<ElevatorEntity> = MutableLiveData()
-    var elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
-    var elevatorError: MutableLiveData<String> = SingleLiveEvent()
+    val entity: MutableLiveData<ElevatorEntity> = MutableLiveData()
+    val elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
+    val elevatorError: MutableLiveData<String> = SingleLiveEvent()
+    val buttonPressed: MutableLiveData<Int?> = SingleLiveEvent()
+    var floorSelected: Int? = null
 
     private var device: BehaviorSubject<String> = BehaviorSubject.create()
 
     private var mSound: SoundPool? = null
     private var mClickSound = 0
+    private var mDingSound = 0
 
     override fun onStart() {
         super.onStart()
@@ -65,14 +68,21 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe {
                                 elevatorState.value = it
+                                if (floorSelected == it.floor) {
+                                    floorSelected = null
+                                    buttonPressed.value = null
+                                    mSound?.play(mDingSound, 1f, 1f, 1, 0, 1f)
+                                }
                             })
 
                     subscribeUntilDetach(service!!.orderObservable
                             .filter { it.order?.device == uuid }
                             .map {
                                 elevatorError.postValue(if (it.success) {
+                                    buttonPressed.postValue(it.order?.floor)
                                     ""
                                 } else {
+                                    buttonPressed.postValue(null)
                                     getAppContext().getString(R.string.service_failed)
                                 })
                                 ""
@@ -100,7 +110,8 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
         } else {
             createOldSoundPool()
         }
-        mClickSound = mSound!!.load(getAppContext(), R.raw.button_sound, 1) // in 2nd param u have to pass your desire ringtone
+        mClickSound = mSound!!.load(getAppContext(), R.raw.elevator_button, 1) // in 2nd param u have to pass your desire ringtone
+        mDingSound = mSound!!.load(getAppContext(), R.raw.elevator_ding, 1)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -122,6 +133,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     fun onFloorSelected(floor: Int) {
         val uuid = device.value
         if (uuid != null) {
+            floorSelected = floor
             mSound?.play(mClickSound, 1f, 1f, 1, 0, 1f)
             service?.sendRelayOrder(uuid, floor)
         }
