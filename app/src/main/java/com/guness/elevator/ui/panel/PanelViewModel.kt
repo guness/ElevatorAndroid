@@ -68,7 +68,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe {
                                 elevatorState.value = it
-                                if (floorSelected == it.floor) {
+                                if (floorSelected == it.floor && it.action == ElevatorState.STOP) {
                                     floorSelected = null
                                     buttonPressed.value = null
                                     mSound?.play(mDingSound, 1f, 1f, 1, 0, 1f)
