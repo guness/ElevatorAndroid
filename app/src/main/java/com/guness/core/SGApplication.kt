@@ -36,6 +36,7 @@ class SGApplication : MultiDexApplication() {
         }
 
         mDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "app-database")
+                .fallbackToDestructiveMigration()
                 .build()
 
         //InitService.startService(this)
