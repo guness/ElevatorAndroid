@@ -28,7 +28,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     val entity: MutableLiveData<ElevatorEntity> = MutableLiveData()
     val elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
     val elevatorError: MutableLiveData<String> = SingleLiveEvent()
-    val buttonPressed: MutableLiveData<Int?> = SingleLiveEvent()
+    val buttonPressed: MutableLiveData<Int?> = MutableLiveData()
     var floorSelected: Int? = null
 
     private var device: BehaviorSubject<String> = BehaviorSubject.create()
@@ -39,7 +39,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
 
     override fun onStart() {
         super.onStart()
-        device.take(1)
+        entity.value ?: device.take(1)
                 .subscribe { uuid ->
                     getApp().getDatabase()
                             .dao()
@@ -96,8 +96,8 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                 }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onCleared() {
+        super.onCleared()
         device.take(1)
                 .subscribe { uuid ->
                     service!!.sendStopListenDevice(uuid)
@@ -105,13 +105,15 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     }
 
     private fun createSoundPool() {
-        mSound = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            createNewSoundPool()
-        } else {
-            createOldSoundPool()
+        if (mSound == null) {
+            mSound = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                createNewSoundPool()
+            } else {
+                createOldSoundPool()
+            }
+            mClickSound = mSound!!.load(getAppContext(), R.raw.elevator_button, 1) // in 2nd param u have to pass your desire ringtone
+            mDingSound = mSound!!.load(getAppContext(), R.raw.elevator_ding, 1)
         }
-        mClickSound = mSound!!.load(getAppContext(), R.raw.elevator_button, 1) // in 2nd param u have to pass your desire ringtone
-        mDingSound = mSound!!.load(getAppContext(), R.raw.elevator_ding, 1)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

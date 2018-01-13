@@ -10,7 +10,7 @@ import com.guness.elevator.model.Elevator
  * Created by guness on 18.12.2017.
  */
 @Entity(tableName = AppDao.TABLE_ELEVATOR,
-        indices = [Index("groupId")],
+        indices = [Index("groupId"), Index("device", unique = true)],
         foreignKeys = [(ForeignKey(entity = GroupEntity::class,
                 parentColumns = ["id"],
                 childColumns = ["groupId"],

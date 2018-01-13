@@ -24,17 +24,32 @@ abstract class AppDao {
     @Insert(onConflict = REPLACE)
     abstract fun insert(group: GroupEntity)
 
+    @Insert(onConflict = REPLACE)
+    abstract fun insert(favorite: FavoriteEntity)
+
     @Delete
     abstract fun delete(group: GroupEntity)
 
+    @Query("DELETE FROM $TABLE_FAVORITE WHERE key = :key")
+    abstract fun deleteFavorite(key: String)
+
     @Query("SELECT * FROM $TABLE_ELEVATOR WHERE device = :device")
     abstract fun getElevator(device: String): Single<ElevatorEntity>
+
+    @Query("SELECT * FROM $TABLE_ELEVATOR ORDER BY groupId ASC")
+    abstract fun getElevators(): LiveData<List<ElevatorEntity>>
 
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getAllDevices(): LiveData<List<GroupWithDevices>>
 
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getGroups(): Single<List<GroupEntity>>
+
+    @Query("SELECT * FROM $TABLE_GROUP")
+    abstract fun getGroupsLive(): LiveData<List<GroupEntity>>
+
+    @Query("SELECT * FROM $TABLE_FAVORITE")
+    abstract fun getFavorites(): LiveData<List<FavoriteEntity>>
 
     @Transaction
     open fun insertGroup(group: GroupEntity, elevators: List<ElevatorEntity>) {
@@ -50,5 +65,7 @@ abstract class AppDao {
         const val TABLE_ELEVATOR = PREFIX + "elevator"
         const val TABLE_GROUP = PREFIX + "group"
         const val TABLE_SETTINGS = PREFIX + "settings"
+        const val TABLE_FAVORITE = PREFIX + "favorite"
+        const val TABLE_PANEL = PREFIX + "panel"
     }
 }
