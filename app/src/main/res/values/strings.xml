@@ -1,26 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">E.C.S</string>
-    <string name="plus_sign">+</string>
-    <string name="panel_off">OFF</string>
     <string name="service_failed">Service Failed</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="add_new">Add new elevators</string>
+    <string name="add_new">Add new elevator</string>
     <string name="delete_group">Delete group</string>
     <string name="click_to_add_elevator">New Elevator</string>
     <string name="click_to_add_floor">New Floor</string>
-    <string name="choose_elevator">Choose Elevator</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_elevator">Pick Elevator</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="remove">Remove</string>
     <string name="pick_floor">Pick Floor</string>
-    <string name="onin">Onin Electronic</string>
+    <string name="onin">Onin Electronics</string>
     <string name="hilow">Hilow Technology</string>
-    <string name="onintech_supported">Only Onintech elevators are supported</string>
-    <string name="onintech">http://onintech.com</string>
+    <string name="onintech_supported">Powered by Onin Electronics</string>
 </resources>

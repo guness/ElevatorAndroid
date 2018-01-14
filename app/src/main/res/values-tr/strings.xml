@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">A.C.S</string>
+    <string name="service_failed">Servis Hatası</string>
+    <string name="navigation_drawer_open">Menüyü Aç</string>
+    <string name="navigation_drawer_close">Menüyü Kapa</string>
+    <string name="add_new">Yeni asansör ekle</string>
+    <string name="delete_group">Grup sil</string>
+    <string name="click_to_add_elevator">Yeni Asansör</string>
+    <string name="click_to_add_floor">Yeni Kat</string>
+    <string name="pick_elevator">Asansör Seç</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+    <string name="remove">Sil</string>
+    <string name="pick_floor">Kat Seç</string>
+    <string name="onin">Onin Elektronik</string>
+    <string name="hilow">Hilow Teknoloji</string>
+    <string name="onintech_supported">Onin Elektronik tarafından sunulmaktadır</string>
+</resources>

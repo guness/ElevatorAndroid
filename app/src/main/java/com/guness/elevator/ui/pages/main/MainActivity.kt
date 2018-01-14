@@ -116,35 +116,32 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
             label6.setText(R.string.click_to_add_floor)
             label8.setText(R.string.click_to_add_floor)
 
+            button2b.setText(R.string.plus_sign)
+            button4b.setText(R.string.plus_sign)
+            button6b.setText(R.string.plus_sign)
+            button8b.setText(R.string.plus_sign)
+
             list?.forEach {
                 when (it.key) {
-                    FavoriteEntity.L1 -> {
-                        label1.text = it.description
-                    }
-                    FavoriteEntity.L2 -> {
-                        label3.text = it.description
-                    }
-                    FavoriteEntity.L3 -> {
-                        label5.text = it.description
-                    }
-                    FavoriteEntity.L4 -> {
-                        label7.text = it.description
-                    }
+                    FavoriteEntity.L1 -> label1.text = it.description
+                    FavoriteEntity.L2 -> label3.text = it.description
+                    FavoriteEntity.L3 -> label5.text = it.description
+                    FavoriteEntity.L4 -> label7.text = it.description
                     FavoriteEntity.R1 -> {
                         label2.text = it.description
-                        button2b.text = (it.floor ?: "+").toString()
+                        button2b.text = it.floor.toString()
                     }
                     FavoriteEntity.R2 -> {
                         label4.text = it.description
-                        button4b.text = (it.floor ?: "+").toString()
+                        button4b.text = it.floor.toString()
                     }
                     FavoriteEntity.R3 -> {
                         label6.text = it.description
-                        button6b.text = (it.floor ?: "+").toString()
+                        button6b.text = it.floor.toString()
                     }
                     FavoriteEntity.R4 -> {
                         label8.text = it.description
-                        button8b.text = (it.floor ?: "+").toString()
+                        button8b.text = it.floor.toString()
                     }
                 }
             }
