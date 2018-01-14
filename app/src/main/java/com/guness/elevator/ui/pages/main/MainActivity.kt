@@ -15,8 +15,10 @@ import com.guness.core.SGActivity
 import com.guness.elevator.R
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.FavoriteEntity
+import com.guness.elevator.db.GroupEntity
 import com.guness.elevator.ui.pickers.elevator.ElevatorPickerFragment
 import com.guness.elevator.ui.pickers.floor.FloorPickerFragment
+import com.guness.elevator.ui.pickers.group.GroupPickerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnLongClickListener {
@@ -104,6 +106,22 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
                     }
                 })
             }
+        })
+        mViewModel.showGroupPickerCommand.observe(this, Observer {
+            val ft = supportFragmentManager.beginTransaction()
+            val prev = supportFragmentManager.findFragmentByTag("group_picker")
+            if (prev != null) {
+                ft.remove(prev)
+            }
+            ft.addToBackStack(null)
+
+            val newFragment = GroupPickerFragment.newInstance()
+            newFragment.show(ft, "group_picker")
+            newFragment.setListener(object : GroupPickerFragment.GroupPickerListener {
+                override fun onGroupRemoved(entity: GroupEntity) {
+                    mViewModel.onGroupRemoved(entity)
+                }
+            })
         })
         mViewModel.favorites.observe(this, Observer { list ->
             label1.setText(R.string.click_to_add_elevator)

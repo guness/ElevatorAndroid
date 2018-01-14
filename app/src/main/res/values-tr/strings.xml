@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">A.C.S</string>
     <string name="service_failed">Servis Hatası</string>
-    <string name="navigation_drawer_open">Menüyü Aç</string>
-    <string name="navigation_drawer_close">Menüyü Kapa</string>
+    <string name="navigation_drawer_open">Menü Aç</string>
+    <string name="navigation_drawer_close">Menü Kapat</string>
     <string name="add_new">Yeni asansör ekle</string>
     <string name="delete_group">Grup sil</string>
     <string name="click_to_add_elevator">Yeni Asansör</string>

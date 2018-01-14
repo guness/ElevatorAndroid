@@ -7,6 +7,7 @@ import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.FavoriteEntity
 import com.guness.elevator.db.FavoriteEntity.KeyDef
 import com.guness.elevator.db.FavoriteEntity.TypeDef
+import com.guness.elevator.db.GroupEntity
 import com.guness.elevator.db.GroupWithDevices
 import com.guness.elevator.ui.pages.panel.PanelActivity
 import com.guness.elevator.ui.pages.scan.ScanActivity
@@ -21,10 +22,7 @@ class MainViewModel(application: Application) : SGViewModel(application) {
     var favorites: LiveData<List<FavoriteEntity>> = getApp().getDatabase().dao().getFavorites()
     var showElevatorPickerCommand: SingleLiveEvent<Pair<String, String?>> = SingleLiveEvent()
     var showFloorPickerCommand: SingleLiveEvent<Triple<String, ElevatorEntity, Int?>> = SingleLiveEvent()
-
-    override fun onStart() {
-        super.onStart()
-    }
+    var showGroupPickerCommand: SingleLiveEvent<Void> = SingleLiveEvent()
 
     fun onElevatorSelected(groupId: Int, itemId: Int) {
         val device = groups.value?.find { it.group?.id?.toInt() == groupId }
@@ -41,7 +39,8 @@ class MainViewModel(application: Application) : SGViewModel(application) {
     }
 
     fun onDeleteElevatorClicked(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        showGroupPickerCommand.call()
+        return true
     }
 
     fun onFavoriteClicked(@KeyDef key: String) {
@@ -77,6 +76,7 @@ class MainViewModel(application: Application) : SGViewModel(application) {
                             it.key = key
                             it.description = entity.description
                             it.device = entity.device
+                            it.groupId = entity.groupId
                             it.type = FavoriteEntity.TYPE_ELEVATOR
                             getApp().getDatabase().dao().insert(it)
                         })
@@ -103,6 +103,7 @@ class MainViewModel(application: Application) : SGViewModel(application) {
                     it.key = key
                     it.description = entity.description
                     it.device = entity.device
+                    it.groupId = entity.groupId
                     it.type = FavoriteEntity.TYPE_FLOOR
                     it.floor = floor
                     getApp().getDatabase().dao().insert(it)
@@ -114,6 +115,14 @@ class MainViewModel(application: Application) : SGViewModel(application) {
                 .observeOn(Schedulers.io())
                 .subscribe(Consumer {
                     getApp().getDatabase().dao().deleteFavorite(key)
+                })
+    }
+
+    fun onGroupRemoved(entity: GroupEntity) {
+        Single.just(entity)
+                .observeOn(Schedulers.io())
+                .subscribe(Consumer {
+                    getApp().getDatabase().dao().clearGroup(it)
                 })
     }
 

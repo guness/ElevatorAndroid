@@ -57,7 +57,6 @@ class ElevatorAdapter : RecyclerView.Adapter<ElevatorAdapter.ElevatorViewHolder>
         return mGroupList.find { it.id == groupId }?.description
     }
 
-
     fun onElevatorSelected(device: String?) {
         mSelectedElevator = device
         notifyDataSetChanged()

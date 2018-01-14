@@ -63,6 +63,12 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_PANEL")
     abstract fun getPanelPrefs(): LiveData<List<PanelPrefsEntity>>
 
+    @Query("DELETE FROM $TABLE_FAVORITE WHERE groupId = :groupId ")
+    abstract fun clearFavorites(groupId: Long)
+
+    @Query("DELETE FROM $TABLE_PANEL WHERE groupId = :groupId ")
+    abstract fun clearPanelPrefs(groupId: Long)
+
     @Transaction
     open fun insertGroup(group: GroupEntity, elevators: List<ElevatorEntity>) {
         delete(group)
@@ -70,6 +76,13 @@ abstract class AppDao {
         if (elevators.isNotEmpty()) {
             insert(elevators)
         }
+    }
+
+    @Transaction
+    open fun clearGroup(group: GroupEntity) {
+        clearFavorites(group.id)
+        clearPanelPrefs(group.id)
+        delete(group)
     }
 
     companion object {

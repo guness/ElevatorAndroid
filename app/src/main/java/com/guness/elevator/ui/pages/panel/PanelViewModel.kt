@@ -189,7 +189,8 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                 .subscribe(Consumer {
                     it.key = key
                     it.floor = floor
-                    it.elevatorId = entity.id
+                    it.device = entity.device
+                    it.groupId = entity.groupId
                     getApp().getDatabase().dao().insert(it)
                 })
     }

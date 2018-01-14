@@ -23,7 +23,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0 - beta 7"
+        versionName "1.0 - beta 8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -63,6 +63,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:support-v4:27.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"

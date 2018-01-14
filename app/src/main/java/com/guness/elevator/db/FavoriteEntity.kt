@@ -19,6 +19,7 @@ class FavoriteEntity {
 
     @TypeDef
     var type: String = ""
+    var groupId: Long = 0
     var device: String = ""
     var floor: Int? = null
     var description: String? = null

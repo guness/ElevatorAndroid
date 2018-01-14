@@ -9,7 +9,7 @@ import android.support.annotation.StringDef
  * Created by guness on 13.01.2018.
  */
 @Entity(tableName = AppDao.TABLE_PANEL,
-        indices = [(Index("elevatorId")), (Index("elevatorId", "key", unique = true))])
+        indices = [(Index("device")), (Index("device", "key", unique = true))])
 //TODO: add foreign key with onDelete=NoAction
 class PanelPrefsEntity {
 
@@ -18,8 +18,8 @@ class PanelPrefsEntity {
 
     @KeyDef
     var key: String = ""
-
-    var elevatorId: Long = 0
+    var groupId: Long = 0
+    var device: String = ""
     var floor: Int = 0
 
     @Retention(AnnotationRetention.SOURCE)
