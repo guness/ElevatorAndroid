@@ -11,6 +11,7 @@ class Fetch {
     @InfoTypeDef
     var type: String = ""
     var id: Long = 0
+    var uuid: String? = null
 
     @Retention(AnnotationRetention.SOURCE)
     @StringDef(TYPE_GROUP)
@@ -18,5 +19,6 @@ class Fetch {
 
     companion object {
         const val TYPE_GROUP = "Group"
+        const val TYPE_UUID = "Uuid"
     }
 }

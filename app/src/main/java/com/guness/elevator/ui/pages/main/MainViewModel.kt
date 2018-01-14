@@ -9,6 +9,7 @@ import com.guness.elevator.db.FavoriteEntity.KeyDef
 import com.guness.elevator.db.FavoriteEntity.TypeDef
 import com.guness.elevator.db.GroupWithDevices
 import com.guness.elevator.ui.pages.panel.PanelActivity
+import com.guness.elevator.ui.pages.scan.ScanActivity
 import com.guness.utils.SingleLiveEvent
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
@@ -35,7 +36,8 @@ class MainViewModel(application: Application) : SGViewModel(application) {
     }
 
     fun onAddElevatorClicked(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        launchCommand.value = Pair(false, ScanActivity.newIntent(getAppContext()))
+        return true
     }
 
     fun onDeleteElevatorClicked(): Boolean {

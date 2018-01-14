@@ -51,6 +51,9 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getGroups(): Single<List<GroupEntity>>
 
+    @Query("SELECT COUNT(*) FROM $TABLE_GROUP")
+    abstract fun getGroupCount(): Single<Int>
+
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getGroupsLive(): LiveData<List<GroupEntity>>
 

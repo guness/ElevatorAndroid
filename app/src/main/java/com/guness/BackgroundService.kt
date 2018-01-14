@@ -39,8 +39,12 @@ class BackgroundService : Service() {
     private var mClient: OkHttpClient? = null
     private val mGson: Gson
     private var mWS: RealWebSocket? = null
+    private val mGroupInfoObservable: PublishSubject<GroupInfo> = PublishSubject.create()
     private val mStateObservable: PublishSubject<ElevatorState> = PublishSubject.create()
     private val mOrderResponseObservable: PublishSubject<RelayOrderResponse> = PublishSubject.create()
+
+    val groupInfoObservable: Observable<GroupInfo>
+        get() = mGroupInfoObservable
 
     val stateObservable: Observable<ElevatorState>
         get() = mStateObservable
@@ -93,6 +97,7 @@ class BackgroundService : Service() {
                         } ?: emptyList()
 
                         app.getDatabase().dao().insertGroup(groupEntity, elevatorEntities)
+                        mGroupInfoObservable.onNext(message)
                     }
                 }
                 is RelayOrderResponse -> {
@@ -114,7 +119,7 @@ class BackgroundService : Service() {
             if (response.code() != 101) {
                 Timber.e("onOpen response: " + response)
             }
-
+/*
             val fetch1 = Fetch()
             fetch1.type = Fetch.TYPE_GROUP
             fetch1.id = 1
@@ -129,7 +134,7 @@ class BackgroundService : Service() {
             fetch3.type = Fetch.TYPE_GROUP
             fetch3.id = 3
             sendPacket(FetchInfo(fetch3))
-
+*/
             (application as SGApplication).getDatabase()
                     .dao()
                     .getGroups()
@@ -225,6 +230,13 @@ class BackgroundService : Service() {
 
     fun sendStopListenDevice(device: String) {
         sendPacket(StopListening(device))
+    }
+
+    fun fetchUUID(uuid: UUID) {
+        val fetch = Fetch()
+        fetch.type = Fetch.TYPE_UUID
+        fetch.uuid = uuid.toString()
+        sendPacket(FetchInfo(fetch))
     }
 
     inner class LocalBinder : Binder() {

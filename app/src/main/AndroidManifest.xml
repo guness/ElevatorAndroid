@@ -12,19 +12,32 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name="com.guness.elevator.ui.pages.splash.SplashActivity">
+        <activity android:name=".ui.pages.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app.onintech.com"
+                    android:scheme="http" />
+                <data
+                    android:host="app.onintech.com"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
         <activity
-            android:name="com.guness.elevator.ui.pages.main.MainActivity"
+            android:name=".ui.pages.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent.Status" />
-        <activity android:name="com.guness.elevator.ui.pages.info.InfoActivity" />
+        <activity android:name=".ui.pages.info.InfoActivity" />
         <activity
-            android:name="com.guness.elevator.ui.pages.panel.PanelActivity"
+            android:name=".ui.pages.panel.PanelActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent.Bars" />
 
         <meta-data
@@ -32,6 +45,8 @@
             android:value="0c7fe290d1b358312d55065a022e1835fbda48ba" />
 
         <service android:name="com.guness.BackgroundService" />
+
+        <activity android:name=".ui.pages.scan.ScanActivity"></activity>
     </application>
 
 </manifest>

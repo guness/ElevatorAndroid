@@ -41,7 +41,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     var floorSelected: Int? = null
     private var mPreselected: Int? = null
 
-    private var device: BehaviorSubject<String> = BehaviorSubject.create()
+    private var mDevice: BehaviorSubject<String> = BehaviorSubject.create()
 
     private var mSound: SoundPool? = null
     private var mClickSound = 0
@@ -49,7 +49,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
 
     override fun onStart() {
         super.onStart()
-        entity.value ?: device.take(1)
+        entity.value ?: mDevice.take(1)
                 .subscribe { uuid ->
                     getApp().getDatabase()
                             .dao()
@@ -70,7 +70,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     override fun onServiceConnected(className: ComponentName, binder: IBinder) {
         super.onServiceConnected(className, binder)
 
-        device.take(1)
+        mDevice.take(1)
                 .subscribe { uuid ->
                     subscribeUntilDetach(service!!.stateObservable
                             .filter { it.device == uuid }
@@ -118,7 +118,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
 
     override fun onCleared() {
         super.onCleared()
-        device.take(1)
+        mDevice.take(1)
                 .subscribe { uuid ->
                     service!!.sendStopListenDevice(uuid)
                 }
@@ -153,7 +153,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     }
 
     fun onFloorSelected(floor: Int) {
-        val uuid = device.value
+        val uuid = mDevice.value
         if (uuid != null) {
             floorSelected = floor
             mSound?.play(mClickSound, 1f, 1f, 1, 0, 1f)
@@ -180,7 +180,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     }
 
     fun setDevice(uuid: String) {
-        device.onNext(uuid)
+        mDevice.onNext(uuid)
     }
 
     fun onFavoriteFloorPicked(@KeyDef key: String, entity: ElevatorEntity, floor: Int) {

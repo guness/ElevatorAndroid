@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:' + play_services_version
     implementation 'com.google.firebase:firebase-database:' + play_services_version
     implementation 'com.google.firebase:firebase-auth:' + play_services_version
+    implementation 'com.google.firebase:firebase-invites:' + play_services_version
     implementation 'com.google.android.gms:play-services-location:' + play_services_version
     // -- Play Services --
 
@@ -119,6 +120,11 @@ dependencies {
     implementation 'android.arch.persistence.room:rxjava2:' + arch_components_version
     kapt 'android.arch.persistence.room:compiler:' + arch_components_version
     // == Arch Components ==
+
+    // -- QR Scan --
+    implementation 'com.google.zxing:core:3.3.1'
+    implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
+    // == QR Scan ==
 
     // -- Utils --
     implementation 'com.jakewharton.timber:timber:4.5.1'

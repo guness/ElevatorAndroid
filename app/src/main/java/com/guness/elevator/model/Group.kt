@@ -5,6 +5,7 @@ package com.guness.elevator.model
  */
 class Group {
     var id: Long = 0
+    var uuid: String = ""
     var description: String? = null
     var elevators: Array<Elevator>? = null
 }

@@ -21,4 +21,6 @@
     <string name="pick_floor">Pick Floor</string>
     <string name="onin">Onin Electronic</string>
     <string name="hilow">Hilow Technology</string>
+    <string name="onintech_supported">Only Onintech elevators are supported</string>
+    <string name="onintech">http://onintech.com</string>
 </resources>
