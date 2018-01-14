@@ -1,4 +1,4 @@
-package com.guness.elevator.ui.panel
+package com.guness.elevator.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.guness.elevator.db.ElevatorEntity
 /**
  * Created by guness on 27.12.2017.
  */
-class PanelAdapter : RecyclerView.Adapter<PanelAdapter.PanelButtonHolder>() {
+class FloorAdapter : RecyclerView.Adapter<FloorAdapter.PanelButtonHolder>() {
 
     private var entity: ElevatorEntity? = null
     var listener: FloorClickedListener? = null

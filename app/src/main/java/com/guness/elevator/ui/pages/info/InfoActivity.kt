@@ -1,4 +1,4 @@
-package com.guness.elevator.ui.info
+package com.guness.elevator.ui.pages.info
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context

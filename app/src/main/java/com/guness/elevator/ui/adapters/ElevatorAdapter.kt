@@ -1,4 +1,4 @@
-package com.guness.elevator.ui
+package com.guness.elevator.ui.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,7 +17,7 @@ class ElevatorAdapter : RecyclerView.Adapter<ElevatorAdapter.ElevatorViewHolder>
     private val mList: ArrayList<ElevatorEntity> = ArrayList()
     private val mGroupList: ArrayList<GroupEntity> = ArrayList()
     var listener: OnElevatorClickedListener? = null
-    var preselected: String? = null
+    private var mSelectedElevator: String? = null
 
     override fun onBindViewHolder(holder: ElevatorViewHolder, position: Int) {
         holder.bind(mList[position])
@@ -57,6 +57,12 @@ class ElevatorAdapter : RecyclerView.Adapter<ElevatorAdapter.ElevatorViewHolder>
         return mGroupList.find { it.id == groupId }?.description
     }
 
+
+    fun onElevatorSelected(device: String?) {
+        mSelectedElevator = device
+        notifyDataSetChanged()
+    }
+
     inner class ElevatorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private var mEntity: ElevatorEntity? = null
 
@@ -69,7 +75,7 @@ class ElevatorAdapter : RecyclerView.Adapter<ElevatorAdapter.ElevatorViewHolder>
         }
 
         fun bind(entity: ElevatorEntity) {
-            itemView.buttonView.isEnabled = preselected != entity.device
+            itemView.buttonView.isEnabled = mSelectedElevator != entity.device
             mEntity = entity
             itemView.textView.text = entity.description
         }

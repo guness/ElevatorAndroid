@@ -1,8 +1,8 @@
-package com.guness.elevator.ui.splash
+package com.guness.elevator.ui.pages.splash
 
 import android.app.Application
 import com.guness.core.SGViewModel
-import com.guness.elevator.ui.info.InfoActivity
+import com.guness.elevator.ui.pages.info.InfoActivity
 
 /**
  * Created by guness on 16.12.2017.

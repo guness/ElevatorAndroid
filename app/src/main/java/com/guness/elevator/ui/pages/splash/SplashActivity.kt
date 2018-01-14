@@ -1,4 +1,4 @@
-package com.guness.elevator.ui.splash
+package com.guness.elevator.ui.pages.splash
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle

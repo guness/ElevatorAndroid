@@ -1,7 +1,7 @@
 package com.guness.elevator.db
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.StringDef
 
@@ -9,10 +9,8 @@ import android.support.annotation.StringDef
  * Created by guness on 13.01.2018.
  */
 @Entity(tableName = AppDao.TABLE_FAVORITE,
-        foreignKeys = [(ForeignKey(entity = ElevatorEntity::class,
-                parentColumns = ["device"],
-                childColumns = ["device"],
-                onDelete = ForeignKey.NO_ACTION))])
+        indices = [(Index("device"))])
+//TODO: add foreign key with onDelete=NoAction
 class FavoriteEntity {
 
     @KeyDef

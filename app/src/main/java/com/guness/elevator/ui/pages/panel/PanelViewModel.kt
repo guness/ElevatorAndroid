@@ -1,7 +1,8 @@
-package com.guness.elevator.ui.panel
+package com.guness.elevator.ui.pages.panel
 
 import android.annotation.TargetApi
 import android.app.Application
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.ComponentName
 import android.media.AudioAttributes
@@ -12,9 +13,13 @@ import android.os.IBinder
 import com.guness.core.SGViewModel
 import com.guness.elevator.R
 import com.guness.elevator.db.ElevatorEntity
+import com.guness.elevator.db.PanelPrefsEntity
+import com.guness.elevator.db.PanelPrefsEntity.KeyDef
 import com.guness.elevator.model.ElevatorState
 import com.guness.utils.SingleLiveEvent
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
@@ -29,7 +34,12 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     val elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
     val elevatorError: MutableLiveData<String> = SingleLiveEvent()
     val buttonPressed: MutableLiveData<Int?> = MutableLiveData()
+    val preferences: LiveData<List<PanelPrefsEntity>> = getApp().getDatabase().dao().getPanelPrefs()
+    var showFloorPickerCommand: SingleLiveEvent<Triple<String, ElevatorEntity, Int?>> = SingleLiveEvent()
+
+
     var floorSelected: Int? = null
+    private var mPreselected: Int? = null
 
     private var device: BehaviorSubject<String> = BehaviorSubject.create()
 
@@ -72,6 +82,16 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                                     floorSelected = null
                                     buttonPressed.value = null
                                     mSound?.play(mDingSound, 1f, 1f, 1, 0, 1f)
+                                }
+                                if (mPreselected != null) {
+                                    Single.just(mPreselected!!)
+                                            .delay(200, TimeUnit.MILLISECONDS)
+                                            .subscribeOn(Schedulers.computation())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(Consumer {
+                                                onFloorSelected(it)
+                                            })
+                                    mPreselected = null
                                 }
                             })
 
@@ -141,7 +161,44 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
         }
     }
 
+    fun onFavoriteClicked(@KeyDef key: String) {
+        val favorite = preferences.value?.find { key == it.key }
+        if (favorite == null) {
+            showFloorPickerCommand.value = Triple(key, entity.value!!, null)
+        } else {
+            onFloorSelected(favorite.floor)
+        }
+    }
+
+    fun onFavoriteLongClicked(@KeyDef key: String) {
+        val favorite = preferences.value?.find { key == it.key }
+        showFloorPickerCommand.value = Triple(key, entity.value!!, favorite?.floor)
+    }
+
+    fun setFloorPreSelected(floor: Int) {
+        mPreselected = floor
+    }
+
     fun setDevice(uuid: String) {
         device.onNext(uuid)
+    }
+
+    fun onFavoriteFloorPicked(@KeyDef key: String, entity: ElevatorEntity, floor: Int) {
+        Single.just(PanelPrefsEntity())
+                .observeOn(Schedulers.io())
+                .subscribe(Consumer {
+                    it.key = key
+                    it.floor = floor
+                    it.elevatorId = entity.id
+                    getApp().getDatabase().dao().insert(it)
+                })
+    }
+
+    fun onFloorRemoved(@KeyDef key: String) {
+        Single.just(key)
+                .observeOn(Schedulers.io())
+                .subscribe(Consumer {
+                    getApp().getDatabase().dao().deletePanelPref(it)
+                })
     }
 }

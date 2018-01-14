@@ -1,8 +1,8 @@
-package com.guness.elevator.ui.info
+package com.guness.elevator.ui.pages.info
 
 import android.app.Application
 import com.guness.core.SGViewModel
-import com.guness.elevator.ui.main.MainActivity
+import com.guness.elevator.ui.pages.main.MainActivity
 
 /**
  * Created by guness on 23.12.2017.

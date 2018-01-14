@@ -1,4 +1,4 @@
-package com.guness.elevator.ui.main
+package com.guness.elevator.ui.pages.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -13,8 +13,10 @@ import android.view.MenuItem
 import android.view.View
 import com.guness.core.SGActivity
 import com.guness.elevator.R
+import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.FavoriteEntity
-import com.guness.elevator.ui.main.elevators.ElevatorPickerFragment
+import com.guness.elevator.ui.pickers.elevator.ElevatorPickerFragment
+import com.guness.elevator.ui.pickers.floor.FloorPickerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnLongClickListener {
@@ -62,14 +64,45 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
         mViewModel.showElevatorPickerCommand.observe(this, Observer {
             if (it != null) {
                 val ft = supportFragmentManager.beginTransaction()
-                val prev = supportFragmentManager.findFragmentByTag("dialog")
+                val prev = supportFragmentManager.findFragmentByTag("elevator_picker")
                 if (prev != null) {
                     ft.remove(prev)
                 }
                 ft.addToBackStack(null)
 
-                val newFragment = ElevatorPickerFragment.newInstance(it.first, it.second)
-                newFragment.show(ft, "dialog")
+                val newFragment = ElevatorPickerFragment.newInstance(it.second)
+                newFragment.show(ft, "elevator_picker")
+                newFragment.setListener(object : ElevatorPickerFragment.ElevatorPickerListener {
+                    override fun onElevatorPicked(entity: ElevatorEntity) {
+                        mViewModel.onFavoriteElevatorPicked(it.first, entity)
+                    }
+
+                    override fun onElevatorRemoved() {
+                        mViewModel.onFavoriteRemoved(it.first)
+                    }
+                })
+            }
+        })
+        mViewModel.showFloorPickerCommand.observe(this, Observer {
+            if (it != null) {
+                val ft = supportFragmentManager.beginTransaction()
+                val prev = supportFragmentManager.findFragmentByTag("floor_picker")
+                if (prev != null) {
+                    ft.remove(prev)
+                }
+                ft.addToBackStack(null)
+
+                val newFragment = FloorPickerFragment.newInstance(it.second.device, it.third)
+                newFragment.show(ft, "floor_picker")
+                newFragment.setListener(object : FloorPickerFragment.FloorPickerListener {
+                    override fun onFloorPicked(floor: Int) {
+                        mViewModel.onFavoriteFloorPicked(it.first, it.second, floor)
+                    }
+
+                    override fun onFloorRemoved() {
+                        mViewModel.onFavoriteRemoved(it.first)
+                    }
+                })
             }
         })
         mViewModel.favorites.observe(this, Observer { list ->
@@ -137,65 +170,29 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
 
     override fun onClick(v: View) {
         mViewModel.onFavoriteClicked(when (v) {
-            button1b -> {
-                FavoriteEntity.L1
-            }
-            button3b -> {
-                FavoriteEntity.L2
-            }
-            button5b -> {
-                FavoriteEntity.L3
-            }
-            button7b -> {
-                FavoriteEntity.L4
-            }
-            button2b -> {
-                FavoriteEntity.R1
-            }
-            button4b -> {
-                FavoriteEntity.R2
-            }
-            button6b -> {
-                FavoriteEntity.R3
-            }
-            button8b -> {
-                FavoriteEntity.R4
-            }
-            else -> {
-                throw UnsupportedOperationException("This type is not supported")
-            }
+            button1b -> FavoriteEntity.L1
+            button3b -> FavoriteEntity.L2
+            button5b -> FavoriteEntity.L3
+            button7b -> FavoriteEntity.L4
+            button2b -> FavoriteEntity.R1
+            button4b -> FavoriteEntity.R2
+            button6b -> FavoriteEntity.R3
+            button8b -> FavoriteEntity.R4
+            else -> throw UnsupportedOperationException("This type is not supported")
         })
     }
 
     override fun onLongClick(v: View): Boolean {
         mViewModel.onFavoriteLongClicked(when (v) {
-            button1b -> {
-                FavoriteEntity.L1
-            }
-            button3b -> {
-                FavoriteEntity.L2
-            }
-            button5b -> {
-                FavoriteEntity.L3
-            }
-            button7b -> {
-                FavoriteEntity.L4
-            }
-            button2b -> {
-                FavoriteEntity.R1
-            }
-            button4b -> {
-                FavoriteEntity.R2
-            }
-            button6b -> {
-                FavoriteEntity.R3
-            }
-            button8b -> {
-                FavoriteEntity.R4
-            }
-            else -> {
-                throw UnsupportedOperationException("This type is not supported")
-            }
+            button1b -> FavoriteEntity.L1
+            button3b -> FavoriteEntity.L2
+            button5b -> FavoriteEntity.L3
+            button7b -> FavoriteEntity.L4
+            button2b -> FavoriteEntity.R1
+            button4b -> FavoriteEntity.R2
+            button6b -> FavoriteEntity.R3
+            button8b -> FavoriteEntity.R4
+            else -> throw UnsupportedOperationException("This type is not supported")
         })
         return true
     }
