@@ -35,9 +35,15 @@
         <activity
             android:name=".ui.pages.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent.Status" />
-        <activity android:name=".ui.pages.info.InfoActivity" />
+        <activity
+            android:name=".ui.pages.info.InfoActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent.Bars" />
         <activity
             android:name=".ui.pages.panel.PanelActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent.Bars" />
+
+        <activity
+            android:name=".ui.pages.scan.ScanActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent.Bars" />
 
         <meta-data
@@ -46,7 +52,6 @@
 
         <service android:name="com.guness.BackgroundService" />
 
-        <activity android:name=".ui.pages.scan.ScanActivity"></activity>
     </application>
 
 </manifest>
