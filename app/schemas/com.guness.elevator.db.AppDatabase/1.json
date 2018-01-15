@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3e567312b4ddfe570e9aaa7decbb8c71",
+    "identityHash": "2cb0a44f540f2b6fd5af811ab3fded63",
     "entities": [
       {
         "tableName": "a_elevator",
@@ -77,6 +77,14 @@
               "groupId"
             ],
             "createSql": "CREATE  INDEX `index_a_elevator_groupId` ON `${TABLE_NAME}` (`groupId`)"
+          },
+          {
+            "name": "index_a_elevator_device",
+            "unique": true,
+            "columnNames": [
+              "device"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_a_elevator_device` ON `${TABLE_NAME}` (`device`)"
           }
         ],
         "foreignKeys": [
@@ -95,12 +103,18 @@
       },
       {
         "tableName": "a_group",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `description` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `uuid` TEXT NOT NULL, `description` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -116,7 +130,16 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_a_group_uuid",
+            "unique": true,
+            "columnNames": [
+              "uuid"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_a_group_uuid` ON `${TABLE_NAME}` (`uuid`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -159,11 +182,132 @@
           }
         ],
         "foreignKeys": []
+      },
+      {
+        "tableName": "a_favorite",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`key` TEXT NOT NULL, `type` TEXT NOT NULL, `groupId` INTEGER NOT NULL, `device` TEXT NOT NULL, `floor` INTEGER, `description` TEXT, PRIMARY KEY(`key`))",
+        "fields": [
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "device",
+            "columnName": "device",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "key"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_a_favorite_device",
+            "unique": false,
+            "columnNames": [
+              "device"
+            ],
+            "createSql": "CREATE  INDEX `index_a_favorite_device` ON `${TABLE_NAME}` (`device`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "a_panel",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `key` TEXT NOT NULL, `groupId` INTEGER NOT NULL, `device` TEXT NOT NULL, `floor` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "groupId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "device",
+            "columnName": "device",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_a_panel_device",
+            "unique": false,
+            "columnNames": [
+              "device"
+            ],
+            "createSql": "CREATE  INDEX `index_a_panel_device` ON `${TABLE_NAME}` (`device`)"
+          },
+          {
+            "name": "index_a_panel_device_key",
+            "unique": true,
+            "columnNames": [
+              "device",
+              "key"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_a_panel_device_key` ON `${TABLE_NAME}` (`device`, `key`)"
+          }
+        ],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3e567312b4ddfe570e9aaa7decbb8c71\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2cb0a44f540f2b6fd5af811ab3fded63\")"
     ]
   }
 }
