@@ -2,7 +2,6 @@ package com.guness.elevator.ui.pages.panel
 
 import android.annotation.TargetApi
 import android.app.Application
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.ComponentName
 import android.media.AudioAttributes
@@ -34,7 +33,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     val elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
     val elevatorError: MutableLiveData<String> = SingleLiveEvent()
     val buttonPressed: MutableLiveData<Int?> = MutableLiveData()
-    val preferences: LiveData<List<PanelPrefsEntity>> = getApp().getDatabase().dao().getPanelPrefs()
+    val preferences: MutableLiveData<List<PanelPrefsEntity>> = MutableLiveData()
     var showFloorPickerCommand: SingleLiveEvent<Triple<String, ElevatorEntity, Int?>> = SingleLiveEvent()
 
 
@@ -63,7 +62,22 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                                 Timber.e(it, "Error fetching elevator")
                             })
                 }
-
+        preferences.value ?: subscribeUntilDetach(mDevice
+                .take(1)
+                .flatMap { uuid ->
+                    getApp().getDatabase()
+                            .dao()
+                            .getPanelPrefs(uuid)
+                            .toObservable()
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    preferences.value = it
+                }, {
+                    preferences.value = null
+                    Timber.e(it, "Error fetching preferences")
+                }))
         createSoundPool()
     }
 
@@ -196,10 +210,10 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     }
 
     fun onFloorRemoved(@KeyDef key: String) {
-        Single.just(key)
+        mDevice.take(1)
                 .observeOn(Schedulers.io())
-                .subscribe(Consumer {
-                    getApp().getDatabase().dao().deletePanelPref(it)
+                .subscribe({
+                    getApp().getDatabase().dao().deletePanelPref(key, it)
                 })
     }
 }

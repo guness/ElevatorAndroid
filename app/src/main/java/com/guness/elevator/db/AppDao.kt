@@ -3,6 +3,7 @@ package com.guness.elevator.db
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 
@@ -36,8 +37,8 @@ abstract class AppDao {
     @Query("DELETE FROM $TABLE_FAVORITE WHERE key = :key")
     abstract fun deleteFavorite(key: String)
 
-    @Query("DELETE FROM $TABLE_PANEL WHERE key = :key")
-    abstract fun deletePanelPref(key: String)
+    @Query("DELETE FROM $TABLE_PANEL WHERE key = :key AND device = :device")
+    abstract fun deletePanelPref(key: String, device: String)
 
     @Query("SELECT * FROM $TABLE_ELEVATOR WHERE device = :device")
     abstract fun getElevator(device: String): Single<ElevatorEntity>
@@ -60,8 +61,8 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_FAVORITE")
     abstract fun getFavorites(): LiveData<List<FavoriteEntity>>
 
-    @Query("SELECT * FROM $TABLE_PANEL")
-    abstract fun getPanelPrefs(): LiveData<List<PanelPrefsEntity>>
+    @Query("SELECT * FROM $TABLE_PANEL WHERE device = :device")
+    abstract fun getPanelPrefs(device: String): Flowable<List<PanelPrefsEntity>>
 
     @Query("DELETE FROM $TABLE_FAVORITE WHERE groupId = :groupId ")
     abstract fun clearFavorites(groupId: Long)
