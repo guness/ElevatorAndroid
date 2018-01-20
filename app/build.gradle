@@ -129,6 +129,7 @@ dependencies {
 
     // -- Utils --
     implementation 'com.jakewharton.timber:timber:4.5.1'
+    implementation 'com.github.guness:NavigationView:0.0.3'
     // == Utils ==
 }
 
