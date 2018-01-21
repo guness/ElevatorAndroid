@@ -10,7 +10,7 @@ import android.support.annotation.StringDef
  */
 @Entity(tableName = AppDao.TABLE_FAVORITE,
         indices = [(Index("device"))])
-//TODO: add foreign key with onDelete=NoAction
+//TODO: add foreign key with onDelete=NoAction for device
 class FavoriteEntity {
 
     @KeyDef

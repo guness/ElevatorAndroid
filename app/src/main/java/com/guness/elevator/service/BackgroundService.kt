@@ -1,26 +1,27 @@
-package com.guness
+package com.guness.elevator.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.guness.core.SGApplication
 import com.guness.elevator.Constants.WS_HOST
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.GroupEntity
 import com.guness.elevator.db.SettingsEntity
 import com.guness.elevator.message.AbstractMessage
+import com.guness.elevator.message.AbstractMessage.Companion.GSON
 import com.guness.elevator.message.`in`.GroupInfo
 import com.guness.elevator.message.`in`.RelayOrderResponse
 import com.guness.elevator.message.`in`.UpdateState
-import com.guness.elevator.message.out.*
+import com.guness.elevator.message.out.FetchInfo
+import com.guness.elevator.message.out.ListenDevice
+import com.guness.elevator.message.out.RelayOrder
+import com.guness.elevator.message.out.StopListening
 import com.guness.elevator.model.ElevatorState
 import com.guness.elevator.model.Fetch
 import com.guness.elevator.model.Order
-import com.guness.utils.RuntimeTypeAdapterFactory
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
@@ -37,7 +38,6 @@ class BackgroundService : Service() {
 
     private val mBinder: Binder
     private var mClient: OkHttpClient? = null
-    private val mGson: Gson
     private var mWS: RealWebSocket? = null
     private val mGroupInfoObservable: PublishSubject<GroupInfo> = PublishSubject.create()
     private val mStateObservable: PublishSubject<ElevatorState> = PublishSubject.create()
@@ -54,28 +54,13 @@ class BackgroundService : Service() {
 
     init {
         mBinder = LocalBinder()
-
-        val rta = RuntimeTypeAdapterFactory.of(AbstractMessage::class.java, "_type")
-                .registerSubtype(GroupInfo::class.java)
-                .registerSubtype(RelayOrderResponse::class.java)
-                .registerSubtype(UpdateState::class.java)
-
-                .registerSubtype(Echo::class.java)
-                .registerSubtype(FetchInfo::class.java)
-                .registerSubtype(ListenDevice::class.java)
-                .registerSubtype(RelayOrder::class.java)
-                .registerSubtype(StopListening::class.java)
-
-        mGson = GsonBuilder()
-                .registerTypeAdapterFactory(rta)
-                .create()
     }
 
     private val mWebSocketListener = object : WebSocketListener() {
         override fun onMessage(webSocket: WebSocket, text: String) {
             Timber.i("onMessage: " + text)
             val message: AbstractMessage? = try {
-                mGson.fromJson(text, AbstractMessage::class.java)
+                GSON.fromJson(text, AbstractMessage::class.java)
             } catch (e: Exception) {
                 Timber.e(e, "Cannot parse message: $text")
                 null
@@ -169,7 +154,7 @@ class BackgroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Timber.e("Starting Service")
+        Timber.d("Starting Service")
 
         getUUID()
                 .subscribeOn(Schedulers.io())
@@ -214,7 +199,7 @@ class BackgroundService : Service() {
     }
 
     private fun sendPacket(data: AbstractMessage) {
-        mWS!!.send(mGson.toJson(data, AbstractMessage::class.java))
+        mWS!!.send(GSON.toJson(data, AbstractMessage::class.java))
     }
 
     fun sendRelayOrder(device: String, floor: Int) {

@@ -31,6 +31,9 @@ abstract class AppDao {
     @Insert(onConflict = REPLACE)
     abstract fun insert(panelPrefs: PanelPrefsEntity)
 
+    @Insert(onConflict = REPLACE)
+    abstract fun insert(orderEntity: OrderEntity)
+
     @Delete
     abstract fun delete(group: GroupEntity)
 
@@ -58,6 +61,12 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getGroupsLive(): LiveData<List<GroupEntity>>
 
+    @Query("SELECT * FROM $TABLE_ORDER LIMIT 1")
+    abstract fun getOrderLive(): LiveData<OrderEntity?>
+
+    @Query("SELECT * FROM $TABLE_ORDER LIMIT 1")
+    abstract fun getOrder(): OrderEntity?
+
     @Query("SELECT * FROM $TABLE_FAVORITE")
     abstract fun getFavorites(): LiveData<List<FavoriteEntity>>
 
@@ -69,6 +78,9 @@ abstract class AppDao {
 
     @Query("DELETE FROM $TABLE_PANEL WHERE groupId = :groupId ")
     abstract fun clearPanelPrefs(groupId: Long)
+
+    @Query("DELETE FROM $TABLE_ORDER")
+    abstract fun clearOrder()
 
     @Transaction
     open fun insertGroup(group: GroupEntity, elevators: List<ElevatorEntity>) {
@@ -93,5 +105,6 @@ abstract class AppDao {
         const val TABLE_SETTINGS = PREFIX + "settings"
         const val TABLE_FAVORITE = PREFIX + "favorite"
         const val TABLE_PANEL = PREFIX + "panel"
+        const val TABLE_ORDER = PREFIX + "order"
     }
 }

@@ -10,7 +10,7 @@ import android.support.annotation.StringDef
  */
 @Entity(tableName = AppDao.TABLE_PANEL,
         indices = [(Index("device")), (Index("device", "key", unique = true))])
-//TODO: add foreign key with onDelete=NoAction
+//TODO: add foreign key with onDelete=NoAction for device
 class PanelPrefsEntity {
 
     @PrimaryKey(autoGenerate = true)

@@ -50,7 +50,19 @@
             android:name="io.fabric.ApiKey"
             android:value="0c7fe290d1b358312d55065a022e1835fbda48ba" />
 
-        <service android:name="com.guness.BackgroundService" />
+        <service android:name=".service.SGFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.SGFirebaseInstanceIDService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.BackgroundService" />
 
     </application>
 

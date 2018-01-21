@@ -2,7 +2,9 @@ package com.guness.elevator.ui.pages.panel
 
 import android.annotation.TargetApi
 import android.app.Application
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.content.ComponentName
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -12,6 +14,7 @@ import android.os.IBinder
 import com.guness.core.SGViewModel
 import com.guness.elevator.R
 import com.guness.elevator.db.ElevatorEntity
+import com.guness.elevator.db.OrderEntity
 import com.guness.elevator.db.PanelPrefsEntity
 import com.guness.elevator.db.PanelPrefsEntity.KeyDef
 import com.guness.elevator.model.ElevatorState
@@ -32,12 +35,17 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     val entity: MutableLiveData<ElevatorEntity> = MutableLiveData()
     val elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
     val elevatorError: MutableLiveData<String> = SingleLiveEvent()
-    val buttonPressed: MutableLiveData<Int?> = MutableLiveData()
+    private val floorSelected: LiveData<OrderEntity?> = getApp().getDatabase().dao().getOrderLive()
+    val buttonPressed: LiveData<Int?> = Transformations.map(floorSelected, {
+        if (it?.device == mDevice.value) {
+            it?.floor
+        } else {
+            null
+        }
+    })
     val preferences: MutableLiveData<List<PanelPrefsEntity>> = MutableLiveData()
     var showFloorPickerCommand: SingleLiveEvent<Triple<String, ElevatorEntity, Int?>> = SingleLiveEvent()
 
-
-    var floorSelected: Int? = null
     private var mPreselected: Int? = null
 
     private var mDevice: BehaviorSubject<String> = BehaviorSubject.create()
@@ -89,12 +97,14 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                     subscribeUntilDetach(service!!.stateObservable
                             .filter { it.device == uuid }
                             .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
+                            .observeOn(Schedulers.io())
                             .subscribe {
-                                elevatorState.value = it
-                                if (floorSelected == it.floor && it.action == ElevatorState.STOP) {
-                                    floorSelected = null
-                                    buttonPressed.value = null
+                                elevatorState.postValue(it)
+
+                                val orderEntity = floorSelected.value
+
+                                if (orderEntity?.device == uuid && orderEntity.floor == it.floor && it.action == ElevatorState.STOP) {
+                                    getApp().getDatabase().dao().clearOrder()
                                     mSound?.play(mDingSound, 1f, 1f, 1, 0, 1f)
                                 }
                                 if (mPreselected != null) {
@@ -113,10 +123,13 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                             .filter { it.order?.device == uuid }
                             .map {
                                 elevatorError.postValue(if (it.success) {
-                                    buttonPressed.postValue(it.order?.floor)
+                                    val orderEntity = OrderEntity()
+                                    orderEntity.floor = it.order?.floor
+                                    orderEntity.device = uuid
+                                    getApp().getDatabase().dao().insert(orderEntity)
                                     ""
                                 } else {
-                                    buttonPressed.postValue(null)
+                                    getApp().getDatabase().dao().clearOrder()
                                     getAppContext().getString(R.string.service_failed)
                                 })
                                 ""
@@ -169,7 +182,6 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     fun onFloorSelected(floor: Int) {
         val uuid = mDevice.value
         if (uuid != null) {
-            floorSelected = floor
             mSound?.play(mClickSound, 1f, 1f, 1, 0, 1f)
             service?.sendRelayOrder(uuid, floor)
         }

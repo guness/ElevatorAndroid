@@ -12,8 +12,8 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.support.annotation.CallSuper
 import android.widget.Toast
-import com.guness.BackgroundService
-import com.guness.BackgroundService.LocalBinder
+import com.guness.elevator.service.BackgroundService
+import com.guness.elevator.service.BackgroundService.LocalBinder
 import com.guness.utils.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

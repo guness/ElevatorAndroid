@@ -78,7 +78,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:' + retrofit_version
     implementation 'com.squareup.retrofit2:adapter-rxjava2:' + retrofit_version
     implementation 'com.squareup.retrofit2:converter-gson:' + retrofit_version
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     // == Retrofit ==
 
@@ -96,6 +96,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:' + play_services_version
     implementation 'com.google.firebase:firebase-auth:' + play_services_version
     implementation 'com.google.firebase:firebase-invites:' + play_services_version
+    implementation 'com.google.firebase:firebase-messaging:' + play_services_version
     implementation 'com.google.android.gms:play-services-location:' + play_services_version
     // -- Play Services --
 
