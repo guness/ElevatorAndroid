@@ -17,4 +17,7 @@
     <string name="hilow">Hilow Teknoloji</string>
     <string name="onintech_supported">Onin Elektronik tarafından sunulmaktadır</string>
     <string name="produced_by">Hilow Teknoloji Yazılım Ltd Şti Tarafından Üretilmiştir.</string>
+    <string name="channel_arrived_description">Asansör geldi</string>
+    <string name="elevator_arrived">Asansörünüz kata gelmiştir</string>
+    <string name="floor_n">Kat %d</string>
 </resources>

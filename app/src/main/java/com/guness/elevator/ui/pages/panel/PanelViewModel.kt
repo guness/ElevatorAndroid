@@ -1,18 +1,14 @@
 package com.guness.elevator.ui.pages.panel
 
-import android.annotation.TargetApi
 import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.content.ComponentName
-import android.media.AudioAttributes
-import android.media.AudioManager
-import android.media.SoundPool
-import android.os.Build
 import android.os.IBinder
 import com.guness.core.SGViewModel
 import com.guness.elevator.R
+import com.guness.elevator.SoundManager
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.OrderEntity
 import com.guness.elevator.db.PanelPrefsEntity
@@ -49,10 +45,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     private var mPreselected: Int? = null
 
     private var mDevice: BehaviorSubject<String> = BehaviorSubject.create()
-
-    private var mSound: SoundPool? = null
-    private var mClickSound = 0
-    private var mDingSound = 0
+    private var mSoundManager = SoundManager(getAppContext())
 
     override fun onStart() {
         super.onStart()
@@ -86,7 +79,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                     preferences.value = null
                     Timber.e(it, "Error fetching preferences")
                 }))
-        createSoundPool()
+        mSoundManager.createSoundPool()
     }
 
     override fun onServiceConnected(className: ComponentName, binder: IBinder) {
@@ -105,7 +98,7 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
 
                                 if (orderEntity?.device == uuid && orderEntity.floor == it.floor && it.action == ElevatorState.STOP) {
                                     getApp().getDatabase().dao().clearOrder()
-                                    mSound?.play(mDingSound, 1f, 1f, 1, 0, 1f)
+                                    mSoundManager.playDing()
                                 }
                                 if (mPreselected != null) {
                                     Single.just(mPreselected!!)
@@ -149,40 +142,13 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                 .subscribe { uuid ->
                     service!!.sendStopListenDevice(uuid)
                 }
-    }
-
-    private fun createSoundPool() {
-        if (mSound == null) {
-            mSound = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                createNewSoundPool()
-            } else {
-                createOldSoundPool()
-            }
-            mClickSound = mSound!!.load(getAppContext(), R.raw.elevator_button, 1) // in 2nd param u have to pass your desire ringtone
-            mDingSound = mSound!!.load(getAppContext(), R.raw.elevator_ding, 1)
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun createNewSoundPool(): SoundPool {
-        val attributes = AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()
-        return SoundPool.Builder()
-                .setAudioAttributes(attributes)
-                .build()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun createOldSoundPool(): SoundPool {
-        return SoundPool(5, AudioManager.STREAM_MUSIC, 0)
+        mSoundManager.release()
     }
 
     fun onFloorSelected(floor: Int) {
         val uuid = mDevice.value
         if (uuid != null) {
-            mSound?.play(mClickSound, 1f, 1f, 1, 0, 1f)
+            mSoundManager.playClick()
             service?.sendRelayOrder(uuid, floor)
         }
     }

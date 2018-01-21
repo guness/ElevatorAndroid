@@ -17,4 +17,7 @@
     <string name="hilow">Hilow Technology</string>
     <string name="onintech_supported">Powered by Onin Electronics</string>
     <string name="produced_by">Produced by Hilow Technology Software</string>
+    <string name="channel_arrived_description">The elevator has arrived</string>
+    <string name="elevator_arrived">Your elevator has arrived</string>
+    <string name="floor_n">Floor %d</string>
 </resources>
