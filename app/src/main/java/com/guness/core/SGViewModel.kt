@@ -61,8 +61,8 @@ abstract class SGViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     // Unsubscribe Rx observables when we are done with the ViewModel
-    @CallSuper
     override fun onCleared() {
+        super.onCleared()
         mCompositeDisposable.clear()
         getApp().unbindService(this)
         mServiceBound = false

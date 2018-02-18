@@ -12,9 +12,9 @@ import com.guness.elevator.db.GroupEntity
 import com.guness.elevator.db.SettingsEntity
 import com.guness.elevator.message.AbstractMessage
 import com.guness.elevator.message.AbstractMessage.Companion.GSON
-import com.guness.elevator.message.`in`.GroupInfo
-import com.guness.elevator.message.`in`.RelayOrderResponse
-import com.guness.elevator.message.`in`.UpdateState
+import com.guness.elevator.message.inc.GroupInfo
+import com.guness.elevator.message.inc.RelayOrderResponse
+import com.guness.elevator.message.inc.UpdateState
 import com.guness.elevator.message.out.FetchInfo
 import com.guness.elevator.message.out.ListenDevice
 import com.guness.elevator.message.out.RelayOrder
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit
 
 class BackgroundService : Service() {
 
-    private val mBinder: Binder
+    private val mBinder = LocalBinder()
     private var mClient: OkHttpClient? = null
     private var mWS: RealWebSocket? = null
     private val mGroupInfoObservable: PublishSubject<GroupInfo> = PublishSubject.create()
@@ -51,10 +51,6 @@ class BackgroundService : Service() {
 
     val orderObservable: Observable<RelayOrderResponse>
         get() = mOrderResponseObservable
-
-    init {
-        mBinder = LocalBinder()
-    }
 
     private val mWebSocketListener = object : WebSocketListener() {
         override fun onMessage(webSocket: WebSocket, text: String) {

@@ -10,6 +10,7 @@ class Fetch {
 
     @InfoTypeDef
     var type: String = ""
+    //TODO: ideally we should not fetch by ID, instead use uuid
     var id: Long = 0
     var uuid: String? = null
 

@@ -14,7 +14,7 @@ android {
     signingConfigs {
         config {
             keyPassword '123456'
-            storeFile file('src/main/resources/keystore.jks')
+            storeFile file('resources/keystore.jks')
             storePassword '123456'
             keyAlias 'RSA'
         }

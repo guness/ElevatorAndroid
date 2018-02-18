@@ -17,7 +17,7 @@ import com.guness.core.SGApplication
 import com.guness.elevator.R
 import com.guness.elevator.message.AbstractMessage
 import com.guness.elevator.message.AbstractMessage.Companion.GSON
-import com.guness.elevator.message.`in`.UpdateState
+import com.guness.elevator.message.inc.UpdateState
 import com.guness.elevator.model.ElevatorState
 import com.guness.elevator.ui.pages.panel.PanelActivity
 import timber.log.Timber

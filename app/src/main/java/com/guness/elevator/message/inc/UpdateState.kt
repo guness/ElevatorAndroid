@@ -1,4 +1,4 @@
-package com.guness.elevator.message.`in`
+package com.guness.elevator.message.inc
 
 import com.guness.elevator.message.AbstractMessage
 import com.guness.elevator.model.ElevatorState

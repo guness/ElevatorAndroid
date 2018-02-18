@@ -49,6 +49,7 @@ abstract class AppDao {
     @Query("SELECT * FROM $TABLE_ELEVATOR ORDER BY groupId ASC")
     abstract fun getElevators(): LiveData<List<ElevatorEntity>>
 
+    @Transaction
     @Query("SELECT * FROM $TABLE_GROUP")
     abstract fun getAllDevices(): LiveData<List<GroupWithDevices>>
 
