@@ -94,21 +94,21 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
                             .subscribe {
                                 elevatorState.postValue(it)
 
-                                val orderEntity = floorSelected.value
-
-                                if (orderEntity?.device == uuid && orderEntity.floor == it.floor && it.action == ElevatorState.STOP) {
-                                    getApp().getDatabase().dao().clearOrder()
-                                    mSoundManager.playDing()
-                                }
-                                if (mPreselected != null) {
-                                    Single.just(mPreselected!!)
-                                            .delay(200, TimeUnit.MILLISECONDS)
-                                            .subscribeOn(Schedulers.computation())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(Consumer {
-                                                onFloorSelected(it)
-                                            })
-                                    mPreselected = null
+                                floorSelected.value?.let { orderEntity ->
+                                    if (orderEntity.device == uuid && orderEntity.floor == it.floor && it.action == ElevatorState.STOP) {
+                                        getApp().getDatabase().dao().clearOrder()
+                                        mSoundManager.playDing()
+                                    }
+                                    if (mPreselected != null) {
+                                        Single.just(mPreselected!!)
+                                                .delay(200, TimeUnit.MILLISECONDS)
+                                                .subscribeOn(Schedulers.computation())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(Consumer {
+                                                    onFloorSelected(it)
+                                                })
+                                        mPreselected = null
+                                    }
                                 }
                             })
 
