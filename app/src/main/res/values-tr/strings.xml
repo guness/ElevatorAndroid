@@ -20,4 +20,8 @@
     <string name="channel_arrived_description">Asansör geldi</string>
     <string name="elevator_arrived">Asansörünüz kata gelmiştir</string>
     <string name="floor_n">Kat %d</string>
+    <string name="description">Tanım</string>
+    <string name="address">Adres</string>
+    <string name="elevator_count">Asansör Sayısı</string>
+    <string name="ok">Tamam</string>
 </resources>

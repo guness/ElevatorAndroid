@@ -56,12 +56,14 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
             menu.add(Menu.NONE, 0, Menu.FIRST, R.string.add_new)
                     .setIcon(R.drawable.ic_playlist_add)
                     .setOnMenuItemClickListener {
+                        drawer_layout.closeDrawer(GravityCompat.START)
                         startActivity(ScanActivity.newIntent(this))
                         true
                     }
             menu.add(Menu.NONE, 0, Menu.FIRST + 1, R.string.delete_group)
                     .setIcon(R.drawable.ic_delete_sweep)
                     .setOnMenuItemClickListener {
+                        drawer_layout.closeDrawer(GravityCompat.START)
                         onDeleteElevatorClicked()
                     }
         })

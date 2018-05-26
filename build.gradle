@@ -10,7 +10,7 @@ buildscript {
     versions.paging = "1.0.0"
     versions.kotlin = "1.2.41"
     versions.support = "27.1.1"
-    versions.play_services = "15.0.0"
+    versions.play_services = "16.0.0"
     versions.retrofit = "2.3.0"
     versions.android_gradle_plugin = "3.1.2"
     versions.glide = "4.5.0"
@@ -26,7 +26,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:' + versions.android_gradle_plugin
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:' + versions.kotlin
         classpath 'io.fabric.tools:gradle:1.25.4'
-        classpath 'com.google.gms:google-services:3.2.1'
+        classpath 'com.google.gms:google-services:4.0.1'
     }
 }
 gradle.projectsEvaluated {

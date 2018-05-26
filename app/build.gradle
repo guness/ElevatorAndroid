@@ -93,12 +93,14 @@ dependencies {
 
     // -- Play Services --
     // https://firebase.google.com/docs/android/setup
-    implementation 'com.google.firebase:firebase-core:15.0.2'// + versions.play_services
-    implementation 'com.google.firebase:firebase-database:' + versions.play_services
-    implementation 'com.google.firebase:firebase-auth:15.1.0'// + versions.play_services
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'// + versions.play_services
-    implementation 'com.google.firebase:firebase-invites:15.0.1'// + versions.play_services
-    implementation 'com.google.android.gms:play-services-location:' + versions.play_services
+    // https://developers.google.com/android/guides/setup
+    implementation 'com.google.firebase:firebase-core:' + versions.play_services
+    implementation 'com.google.firebase:firebase-database:16.0.1'// + versions.play_services
+    implementation 'com.google.firebase:firebase-auth:16.0.1'// + versions.play_services
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'// + versions.play_services
+    implementation 'com.google.firebase:firebase-invites:' + versions.play_services
+    implementation 'com.google.firebase:firebase-perf:' + versions.play_services
+    implementation 'com.google.android.gms:play-services-location:15.0.1'// + versions.play_services
     // -- Play Services --
 
     // -- Fabric --

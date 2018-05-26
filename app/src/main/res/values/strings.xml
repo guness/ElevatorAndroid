@@ -20,4 +20,8 @@
     <string name="channel_arrived_description">The elevator has arrived</string>
     <string name="elevator_arrived">Your elevator has arrived</string>
     <string name="floor_n">Floor %d</string>
+    <string name="description">Description</string>
+    <string name="address">Address</string>
+    <string name="elevator_count">Elevator Count</string>
+    <string name="ok">OK</string>
 </resources>

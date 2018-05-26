@@ -1,11 +1,12 @@
 package com.guness.elevator.ui.pages.info
 
 import android.app.Application
+import android.arch.lifecycle.MutableLiveData
 import android.content.ComponentName
 import android.net.Uri
 import android.os.IBinder
 import com.guness.core.SGViewModel
-import com.guness.elevator.ui.pages.main.MainActivity
+import com.guness.elevator.model.Group
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -17,6 +18,7 @@ import java.util.*
  */
 class InfoViewModel(application: Application) : SGViewModel(application) {
 
+    val group: MutableLiveData<Group> = MutableLiveData()
 
     private var mUUID: BehaviorSubject<UUID> = BehaviorSubject.create()
 
@@ -28,12 +30,12 @@ class InfoViewModel(application: Application) : SGViewModel(application) {
     fun setLink(uri: Uri) {
         val uuid = uri.getQueryParameter("uuid")
         if (uuid == null) {
-            Timber.e("Cannot find parameter on the uri: " + uri)
+            Timber.e("Cannot find parameter on the uri: $uri")
         } else {
             try {
                 mUUID.onNext(UUID.fromString(uuid))
             } catch (e: IllegalArgumentException) {
-                Timber.e(e, "Cannot parse UUID on the uri: " + uri)
+                Timber.e(e, "Cannot parse UUID on the uri: $uri")
             }
         }
     }
@@ -50,7 +52,7 @@ class InfoViewModel(application: Application) : SGViewModel(application) {
                             .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe {
-                                launchCommand.value = Pair(true, MainActivity.newIntent(getAppContext()))
+                                group.value = it.group
                             }
 
                     service!!.fetchUUID(uuid)
