@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_picker_group.*
 /**
  * A simple [Fragment] subclass.
  */
-class GroupPickerFragment : DialogFragment() {
+class GroupPickerFragment : Fragment() {
     private lateinit var mAdapter: GroupAdapter
     private lateinit var mViewModel: GroupPickerViewModel
     private var mListener: GroupPickerListener? = null
@@ -48,11 +48,10 @@ class GroupPickerFragment : DialogFragment() {
         removeButton.setOnClickListener {
             if (mViewModel.selected != null) {
                 mListener?.onGroupRemoved(mViewModel.selected!!)
-                dismiss()
             }
         }
         cancelButton.setOnClickListener {
-            dismiss()
+            mListener?.onCancelled()
         }
     }
 
@@ -62,6 +61,7 @@ class GroupPickerFragment : DialogFragment() {
 
     interface GroupPickerListener {
         fun onGroupRemoved(entity: GroupEntity)
+        fun onCancelled()
     }
 
     companion object {

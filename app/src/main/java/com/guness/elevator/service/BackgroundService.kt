@@ -54,7 +54,7 @@ class BackgroundService : Service() {
 
     private val mWebSocketListener = object : WebSocketListener() {
         override fun onMessage(webSocket: WebSocket, text: String) {
-            Timber.i("onMessage: " + text)
+            Timber.i("onMessage: $text")
             val message: AbstractMessage? = try {
                 GSON.fromJson(text, AbstractMessage::class.java)
             } catch (e: Exception) {
@@ -86,19 +86,19 @@ class BackgroundService : Service() {
                 }
                 else -> {
                     if (message != null) {
-                        Timber.e("Unhandled message: " + message)
+                        Timber.e("Unhandled message: $message")
                     }
                 }
             }
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            Timber.e("onClosed reason: " + reason)
+            Timber.e("onClosed reason: $reason")
         }
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             if (response.code() != 101) {
-                Timber.e("onOpen response: " + response)
+                Timber.e("onOpen response: $response")
             }
 /*
             val fetch1 = Fetch()

@@ -8,8 +8,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import com.guness.elevator.R
 import com.guness.utils.DialogHelper
 import timber.log.Timber
 
@@ -96,7 +98,11 @@ abstract class SGActivity : AppCompatActivity() {
      * Used for finishing activities nice
      */
     override fun onBackPressed() {
-        supportFinishAfterTransition()
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            supportFinishAfterTransition()
+        } else {
+            supportFragmentManager.popBackStack()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -151,6 +157,17 @@ abstract class SGActivity : AppCompatActivity() {
                 super.onActivityResult(requestCode, resultCode, data)
             }
         }
+    }
+
+    fun showFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().also {
+            it.addToBackStack(null)
+            it.add(R.id.fragment_container, fragment)
+        }.commit()
+    }
+
+    fun dismissFragment() {
+        supportFragmentManager.popBackStack()
     }
 
     companion object {

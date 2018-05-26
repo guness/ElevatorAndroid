@@ -1,24 +1,20 @@
 package com.guness.elevator.ui.pickers.floor
 
-
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.guness.elevator.R
 import com.guness.elevator.ui.adapters.FloorAdapter
 import kotlinx.android.synthetic.main.fragment_picker_floor.*
 
-
 /**
  * A simple [Fragment] subclass.
  */
-class FloorPickerFragment : DialogFragment() {
+class FloorPickerFragment : Fragment() {
     private lateinit var mAdapter: FloorAdapter
     private lateinit var mViewModel: FloorPickerViewModel
     private var mListener: FloorPickerListener? = null
@@ -38,7 +34,6 @@ class FloorPickerFragment : DialogFragment() {
         mAdapter.listener = object : FloorAdapter.FloorClickedListener {
             override fun onClick(floor: Int) {
                 mListener?.onFloorPicked(floor)
-                dismiss()
             }
         }
     }
@@ -50,12 +45,11 @@ class FloorPickerFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listView.adapter = mAdapter
-        cancelButton.setOnClickListener {
-            dismiss()
-        }
         removeButton.setOnClickListener {
             mListener?.onFloorRemoved()
-            dismiss()
+        }
+        cancelButton.setOnClickListener {
+            mListener?.onCancelled()
         }
     }
 
@@ -66,6 +60,7 @@ class FloorPickerFragment : DialogFragment() {
     interface FloorPickerListener {
         fun onFloorPicked(floor: Int)
         fun onFloorRemoved()
+        fun onCancelled()
     }
 
     companion object {

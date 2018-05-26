@@ -72,24 +72,25 @@ class PanelActivity : SGActivity(), View.OnClickListener, View.OnLongClickListen
         })
         mViewModel.showFloorPickerCommand.observe(this, Observer {
             if (it != null) {
-                val ft = supportFragmentManager.beginTransaction()
-                val prev = supportFragmentManager.findFragmentByTag("floor_picker")
-                if (prev != null) {
-                    ft.remove(prev)
-                }
-                ft.addToBackStack(null)
-
                 val newFragment = FloorPickerFragment.newInstance(it.second.device, it.third)
-                newFragment.show(ft, "floor_picker")
+
                 newFragment.setListener(object : FloorPickerFragment.FloorPickerListener {
                     override fun onFloorPicked(floor: Int) {
                         mViewModel.onFavoriteFloorPicked(it.first, it.second, floor)
+                        dismissFragment()
                     }
 
                     override fun onFloorRemoved() {
                         mViewModel.onFloorRemoved(it.first)
+                        dismissFragment()
+                    }
+
+                    override fun onCancelled() {
+                        dismissFragment()
                     }
                 })
+
+                showFragment(newFragment)
             }
         })
         mAdapter.listener = object : FloorClickedListener {

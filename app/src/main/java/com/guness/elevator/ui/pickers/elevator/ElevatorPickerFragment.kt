@@ -1,24 +1,21 @@
 package com.guness.elevator.ui.pickers.elevator
 
-
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.guness.elevator.R
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.ui.adapters.ElevatorAdapter
 import kotlinx.android.synthetic.main.fragment_picker_elevator.*
 
-
 /**
  * A simple [Fragment] subclass.
  */
-class ElevatorPickerFragment : DialogFragment() {
+class ElevatorPickerFragment : Fragment() {
     private lateinit var mAdapter: ElevatorAdapter
     private lateinit var mViewModel: ElevatorPickerViewModel
     private var mListener: ElevatorPickerListener? = null
@@ -41,7 +38,6 @@ class ElevatorPickerFragment : DialogFragment() {
         mAdapter.listener = object : ElevatorAdapter.OnElevatorClickedListener {
             override fun onElevatorClicked(entity: ElevatorEntity) {
                 mListener?.onElevatorPicked(entity)
-                dismiss()
             }
         }
     }
@@ -56,10 +52,9 @@ class ElevatorPickerFragment : DialogFragment() {
         listView.addItemDecoration(GroupDecorator(mAdapter))
         removeButton.setOnClickListener {
             mListener?.onElevatorRemoved()
-            dismiss()
         }
         cancelButton.setOnClickListener {
-            dismiss()
+            mListener?.onCancelled()
         }
     }
 
@@ -70,6 +65,7 @@ class ElevatorPickerFragment : DialogFragment() {
     interface ElevatorPickerListener {
         fun onElevatorPicked(entity: ElevatorEntity)
         fun onElevatorRemoved()
+        fun onCancelled()
     }
 
     companion object {

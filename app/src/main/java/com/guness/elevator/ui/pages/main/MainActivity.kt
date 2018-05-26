@@ -65,63 +65,66 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
         })
         mViewModel.showElevatorPickerCommand.observe(this, Observer {
             if (it != null) {
-                val ft = supportFragmentManager.beginTransaction()
-                val prev = supportFragmentManager.findFragmentByTag("elevator_picker")
-                if (prev != null) {
-                    ft.remove(prev)
-                }
-                ft.addToBackStack(null)
 
                 val newFragment = ElevatorPickerFragment.newInstance(it.second)
-                newFragment.show(ft, "elevator_picker")
+
                 newFragment.setListener(object : ElevatorPickerFragment.ElevatorPickerListener {
                     override fun onElevatorPicked(entity: ElevatorEntity) {
                         mViewModel.onFavoriteElevatorPicked(it.first, entity)
+                        dismissFragment()
                     }
 
                     override fun onElevatorRemoved() {
                         mViewModel.onFavoriteRemoved(it.first)
+                        dismissFragment()
+                    }
+
+                    override fun onCancelled() {
+                        dismissFragment()
                     }
                 })
+
+                showFragment(newFragment)
             }
         })
         mViewModel.showFloorPickerCommand.observe(this, Observer {
             if (it != null) {
-                val ft = supportFragmentManager.beginTransaction()
-                val prev = supportFragmentManager.findFragmentByTag("floor_picker")
-                if (prev != null) {
-                    ft.remove(prev)
-                }
-                ft.addToBackStack(null)
 
                 val newFragment = FloorPickerFragment.newInstance(it.second.device, it.third)
-                newFragment.show(ft, "floor_picker")
+
                 newFragment.setListener(object : FloorPickerFragment.FloorPickerListener {
                     override fun onFloorPicked(floor: Int) {
                         mViewModel.onFavoriteFloorPicked(it.first, it.second, floor)
+                        dismissFragment()
                     }
 
                     override fun onFloorRemoved() {
-                        mViewModel.onFavoriteRemoved(it.first)
+                        dismissFragment()
+                    }
+
+                    override fun onCancelled() {
+                        dismissFragment()
                     }
                 })
+                showFragment(newFragment)
             }
         })
         mViewModel.showGroupPickerCommand.observe(this, Observer {
-            val ft = supportFragmentManager.beginTransaction()
-            val prev = supportFragmentManager.findFragmentByTag("group_picker")
-            if (prev != null) {
-                ft.remove(prev)
-            }
-            ft.addToBackStack(null)
 
             val newFragment = GroupPickerFragment.newInstance()
-            newFragment.show(ft, "group_picker")
+
             newFragment.setListener(object : GroupPickerFragment.GroupPickerListener {
                 override fun onGroupRemoved(entity: GroupEntity) {
                     mViewModel.onGroupRemoved(entity)
+                    dismissFragment()
+                }
+
+                override fun onCancelled() {
+                    dismissFragment()
                 }
             })
+
+            showFragment(newFragment)
         })
         mViewModel.favorites.observe(this, Observer { list ->
             label1.setText(R.string.click_to_add_elevator)
