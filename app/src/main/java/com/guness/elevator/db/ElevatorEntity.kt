@@ -25,8 +25,6 @@ class ElevatorEntity {
     var floorCount: Int = 0
     var address: String? = null
     var description: String? = null
-    var latitude: Double? = null
-    var longitude: Double? = null
 
     companion object {
 
@@ -39,8 +37,6 @@ class ElevatorEntity {
             entity.floorCount = elevator.floorCount
             entity.address = elevator.address
             entity.description = elevator.description
-            entity.latitude = elevator.latitude
-            entity.longitude = elevator.longitude
             return entity
         }
     }

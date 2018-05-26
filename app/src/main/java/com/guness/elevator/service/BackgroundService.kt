@@ -6,6 +6,7 @@ import android.os.Binder
 import android.os.IBinder
 import com.google.firebase.iid.FirebaseInstanceId
 import com.guness.core.SGApplication
+import com.guness.elevator.Constants
 import com.guness.elevator.Constants.WS_HOST
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.GroupEntity
@@ -110,13 +111,13 @@ class BackgroundService : Service() {
                         if (groups.isEmpty()) {
                             val fetch1 = Fetch()
                             fetch1.type = Fetch.TYPE_GROUP
-                            fetch1.id = 1
+                            fetch1.uuid = Constants.DEMO_GROUP_UUID
                             sendPacket(FetchInfo(fetch1))
                         } else {
                             groups.forEach {
                                 val fetch = Fetch()
-                                fetch.type = Fetch.TYPE_GROUP
-                                fetch.id = it.id
+                                fetch.type = Fetch.TYPE_UUID
+                                fetch.uuid = it.uuid
                                 sendPacket(FetchInfo(fetch))
                             }
                         }

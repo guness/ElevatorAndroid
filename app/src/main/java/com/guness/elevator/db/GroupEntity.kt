@@ -15,7 +15,10 @@ class GroupEntity {
     @PrimaryKey
     var id: Long = 0
     var uuid: String = ""
+    var address: String? = null
     var description: String? = null
+    var latitude: Double? = null
+    var longitude: Double? = null
 
     companion object {
         fun fromGroup(group: Group): GroupEntity {
@@ -23,6 +26,9 @@ class GroupEntity {
             entity.id = group.id
             entity.uuid = group.uuid
             entity.description = group.description
+            entity.address = group.address
+            entity.latitude = group.latitude
+            entity.longitude = group.longitude
             return entity
         }
     }

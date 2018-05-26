@@ -8,7 +8,7 @@ class Group {
     var uuid: String = ""
     var description: String? = null
     var address: String? = null
-    var latitude: Float? = null
-    var longtitude: Float? = null
+    var latitude: Double? = null
+    var longitude: Double? = null
     var elevators: Array<Elevator>? = null
 }
