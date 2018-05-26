@@ -409,6 +409,12 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.design.widget.CoordinatorLayout>
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" />
+
     <com.guness.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -419,9 +425,4 @@
         app:footerLayout="@layout/nav_footer_main"
         app:headerLayout="@layout/nav_header_main" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true" />
 </android.support.v4.widget.DrawerLayout>

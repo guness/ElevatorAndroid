@@ -16,6 +16,7 @@ import com.guness.elevator.R
 import com.guness.elevator.db.ElevatorEntity
 import com.guness.elevator.db.FavoriteEntity
 import com.guness.elevator.db.GroupEntity
+import com.guness.elevator.ui.pages.scan.ScanActivity
 import com.guness.elevator.ui.pickers.elevator.ElevatorPickerFragment
 import com.guness.elevator.ui.pickers.floor.FloorPickerFragment
 import com.guness.elevator.ui.pickers.group.GroupPickerFragment
@@ -55,12 +56,13 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
             menu.add(Menu.NONE, 0, Menu.FIRST, R.string.add_new)
                     .setIcon(R.drawable.ic_playlist_add)
                     .setOnMenuItemClickListener {
-                        mViewModel.onAddElevatorClicked()
+                        startActivity(ScanActivity.newIntent(this))
+                        true
                     }
             menu.add(Menu.NONE, 0, Menu.FIRST + 1, R.string.delete_group)
                     .setIcon(R.drawable.ic_delete_sweep)
                     .setOnMenuItemClickListener {
-                        mViewModel.onDeleteElevatorClicked()
+                        onDeleteElevatorClicked()
                     }
         })
         mViewModel.showElevatorPickerCommand.observe(this, Observer {
@@ -109,23 +111,7 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
                 showFragment(newFragment)
             }
         })
-        mViewModel.showGroupPickerCommand.observe(this, Observer {
 
-            val newFragment = GroupPickerFragment.newInstance()
-
-            newFragment.setListener(object : GroupPickerFragment.GroupPickerListener {
-                override fun onGroupRemoved(entity: GroupEntity) {
-                    mViewModel.onGroupRemoved(entity)
-                    dismissFragment()
-                }
-
-                override fun onCancelled() {
-                    dismissFragment()
-                }
-            })
-
-            showFragment(newFragment)
-        })
         mViewModel.favorites.observe(this, Observer { list ->
             label1.setText(R.string.click_to_add_elevator)
             label3.setText(R.string.click_to_add_elevator)
@@ -184,6 +170,24 @@ class MainActivity : SGActivity(), NavigationView.OnNavigationItemSelectedListen
         button6b.setOnLongClickListener(this)
         button7b.setOnLongClickListener(this)
         button8b.setOnLongClickListener(this)
+    }
+
+    private fun onDeleteElevatorClicked(): Boolean {
+        val newFragment = GroupPickerFragment.newInstance()
+
+        newFragment.setListener(object : GroupPickerFragment.GroupPickerListener {
+            override fun onGroupRemoved(entity: GroupEntity) {
+                mViewModel.onGroupRemoved(entity)
+                dismissFragment()
+            }
+
+            override fun onCancelled() {
+                dismissFragment()
+            }
+        })
+
+        showFragment(newFragment)
+        return true
     }
 
     override fun onClick(v: View) {

@@ -10,7 +10,6 @@ import com.guness.elevator.db.FavoriteEntity.TypeDef
 import com.guness.elevator.db.GroupEntity
 import com.guness.elevator.db.GroupWithDevices
 import com.guness.elevator.ui.pages.panel.PanelActivity
-import com.guness.elevator.ui.pages.scan.ScanActivity
 import com.guness.utils.SingleLiveEvent
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
@@ -22,7 +21,6 @@ class MainViewModel(application: Application) : SGViewModel(application) {
     var favorites: LiveData<List<FavoriteEntity>> = getApp().getDatabase().dao().getFavorites()
     var showElevatorPickerCommand: SingleLiveEvent<Pair<String, String?>> = SingleLiveEvent()
     var showFloorPickerCommand: SingleLiveEvent<Triple<String, ElevatorEntity, Int?>> = SingleLiveEvent()
-    var showGroupPickerCommand: SingleLiveEvent<Void> = SingleLiveEvent()
 
     fun onElevatorSelected(groupId: Int, itemId: Int) {
         val device = groups.value?.find { it.group?.id?.toInt() == groupId }
@@ -31,16 +29,6 @@ class MainViewModel(application: Application) : SGViewModel(application) {
         if (device != null) {
             launchCommand.value = Pair(false, PanelActivity.newIntent(getAppContext(), device))
         }
-    }
-
-    fun onAddElevatorClicked(): Boolean {
-        launchCommand.value = Pair(false, ScanActivity.newIntent(getAppContext()))
-        return true
-    }
-
-    fun onDeleteElevatorClicked(): Boolean {
-        showGroupPickerCommand.call()
-        return true
     }
 
     fun onFavoriteClicked(@KeyDef key: String) {

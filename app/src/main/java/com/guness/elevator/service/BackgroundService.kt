@@ -100,33 +100,25 @@ class BackgroundService : Service() {
             if (response.code() != 101) {
                 Timber.e("onOpen response: $response")
             }
-/*
-            val fetch1 = Fetch()
-            fetch1.type = Fetch.TYPE_GROUP
-            fetch1.id = 1
-            sendPacket(FetchInfo(fetch1))
 
-            val fetch2 = Fetch()
-            fetch2.type = Fetch.TYPE_GROUP
-            fetch2.id = 2
-            sendPacket(FetchInfo(fetch2))
-
-            val fetch3 = Fetch()
-            fetch3.type = Fetch.TYPE_GROUP
-            fetch3.id = 3
-            sendPacket(FetchInfo(fetch3))
-*/
             (application as SGApplication).getDatabase()
                     .dao()
                     .getGroups()
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .subscribe({ groups ->
-                        groups.forEach {
-                            val fetch = Fetch()
-                            fetch.type = Fetch.TYPE_GROUP
-                            fetch.id = it.id
-                            sendPacket(FetchInfo(fetch))
+                        if (groups.isEmpty()) {
+                            val fetch1 = Fetch()
+                            fetch1.type = Fetch.TYPE_GROUP
+                            fetch1.id = 1
+                            sendPacket(FetchInfo(fetch1))
+                        } else {
+                            groups.forEach {
+                                val fetch = Fetch()
+                                fetch.type = Fetch.TYPE_GROUP
+                                fetch.id = it.id
+                                sendPacket(FetchInfo(fetch))
+                            }
                         }
                     }, {
                         Timber.e(it, "Error fetching groups")

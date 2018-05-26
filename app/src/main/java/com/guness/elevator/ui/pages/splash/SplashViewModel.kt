@@ -6,7 +6,6 @@ import com.guness.core.SGApplication
 import com.guness.core.SGViewModel
 import com.guness.elevator.ui.pages.info.InfoActivity
 import com.guness.elevator.ui.pages.main.MainActivity
-import com.guness.elevator.ui.pages.scan.ScanActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
@@ -30,11 +29,7 @@ class SplashViewModel(application: Application) : SGViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(Consumer {
                     launchCommand.value = if (mDeepLink == null) {
-                        if (it > 0) {
-                            Pair(true, MainActivity.newIntent(getAppContext()))
-                        } else {
-                            Pair(true, ScanActivity.newIntent(getAppContext()))
-                        }
+                        Pair(true, MainActivity.newIntent(getAppContext()))
                     } else {
                         Pair(true, InfoActivity.newIntent(getAppContext(), mDeepLink!!))
                     }
@@ -43,6 +38,6 @@ class SplashViewModel(application: Application) : SGViewModel(application) {
 
     fun onDeepLinkDetected(link: Uri?) {
         mDeepLink = link
-        Timber.d("DeepLink detected: " + link)
+        Timber.d("DeepLink detected: $link")
     }
 }
