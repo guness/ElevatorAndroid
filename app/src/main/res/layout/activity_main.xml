@@ -422,7 +422,6 @@
         android:layout_gravity="start"
         android:background="@drawable/side_nav_bar"
         android:fitsSystemWindows="true"
-        app:footerLayout="@layout/nav_footer_main"
         app:headerLayout="@layout/nav_header_main" />
 
 </android.support.v4.widget.DrawerLayout>

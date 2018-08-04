@@ -110,7 +110,7 @@ class BackgroundService : Service() {
                     .subscribe({ groups ->
                         if (groups.isEmpty()) {
                             val fetch1 = Fetch()
-                            fetch1.type = Fetch.TYPE_GROUP
+                            fetch1.type = Fetch.TYPE_UUID
                             fetch1.uuid = Constants.DEMO_GROUP_UUID
                             sendPacket(FetchInfo(fetch1))
                         } else {
@@ -169,7 +169,7 @@ class BackgroundService : Service() {
         val request = Request.Builder()
                 .url(WS_HOST)
                 .build()
-        return RealWebSocket(request, mWebSocketListener, Random())
+        return RealWebSocket(request, mWebSocketListener, Random(), 20000)
     }
 
     private fun getUUID(): Single<String> {
@@ -188,7 +188,9 @@ class BackgroundService : Service() {
     }
 
     private fun sendPacket(data: AbstractMessage) {
-        mWS!!.send(GSON.toJson(data, AbstractMessage::class.java))
+        val message = GSON.toJson(data, AbstractMessage::class.java)
+        Timber.d("Sending packet: $message")
+        mWS!!.send(message)
     }
 
     fun sendRelayOrder(device: String, floor: Int) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="panel_off" translatable="false">OFF</string>
-    <string name="onintech" translatable="false">http://onintech.com</string>
+    <string name="hilow_web" translatable="false">http://onintech.com</string>
     <string name="plus_sign" translatable="false">+</string>
 </resources>

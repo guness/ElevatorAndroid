@@ -88,7 +88,7 @@ class SGFirebaseMessagingService : FirebaseMessagingService() {
     private fun showDingNotification(device: String, floor: Int) {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_onin)
+                .setSmallIcon(R.drawable.ic_hilow)
                 .setSound(mDing)
                 .setAutoCancel(true)
                 .setNumber(floor)

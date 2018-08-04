@@ -11,7 +11,7 @@ class Fetch {
     @InfoTypeDef
     var type: String = ""
     //TODO: ideally we should not fetch by ID, instead use key
-    var id: Long = 0
+    var id: Long? = 0
     var uuid: String? = null
 
     @Retention(AnnotationRetention.SOURCE)

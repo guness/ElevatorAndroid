@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     signingConfigs {
         config {
             keyPassword '123456'
@@ -20,9 +20,9 @@ android {
     }
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 27
-        versionCode 3
-        versionName "1.0.1 - beta 1"
+        targetSdkVersion 28
+        versionCode 4
+        versionName "1.0.2 - beta 2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -66,7 +66,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
@@ -76,8 +76,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:' + versions.retrofit
     implementation 'com.squareup.retrofit2:adapter-rxjava2:' + versions.retrofit
     implementation 'com.squareup.retrofit2:converter-gson:' + versions.retrofit
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     // == Retrofit ==
 
@@ -96,8 +96,8 @@ dependencies {
     // https://developers.google.com/android/guides/setup
     implementation 'com.google.firebase:firebase-core:' + versions.play_services
     implementation 'com.google.firebase:firebase-database:16.0.1'// + versions.play_services
-    implementation 'com.google.firebase:firebase-auth:16.0.1'// + versions.play_services
-    implementation 'com.google.firebase:firebase-messaging:17.0.0'// + versions.play_services
+    implementation 'com.google.firebase:firebase-auth:16.0.2'// + versions.play_services
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'// + versions.play_services
     implementation 'com.google.firebase:firebase-invites:' + versions.play_services
     implementation 'com.google.firebase:firebase-perf:' + versions.play_services
     implementation 'com.google.android.gms:play-services-location:15.0.1'// + versions.play_services
@@ -124,7 +124,7 @@ dependencies {
     // == QR Scan ==
 
     // -- Utils --
-    implementation 'com.jakewharton.timber:timber:4.6.0'
+    implementation 'com.jakewharton.timber:timber:4.7.0'
     implementation 'com.github.guness:NavigationView:0.0.7'
     // == Utils ==
 }

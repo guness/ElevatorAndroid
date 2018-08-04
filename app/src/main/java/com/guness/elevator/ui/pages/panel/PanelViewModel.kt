@@ -32,13 +32,13 @@ class PanelViewModel(application: Application) : SGViewModel(application) {
     val elevatorState: MutableLiveData<ElevatorState> = MutableLiveData()
     val elevatorError: MutableLiveData<String> = SingleLiveEvent()
     private val floorSelected: LiveData<OrderEntity?> = getApp().getDatabase().dao().getOrderLive()
-    val buttonPressed: LiveData<Int?> = Transformations.map(floorSelected, {
+    val buttonPressed: LiveData<Int?> = Transformations.map(floorSelected) {
         if (it?.device == mDevice.value) {
             it?.floor
         } else {
             null
         }
-    })
+    }
     val preferences: MutableLiveData<List<PanelPrefsEntity>> = MutableLiveData()
     var showFloorPickerCommand: SingleLiveEvent<Triple<String, ElevatorEntity, Int?>> = SingleLiveEvent()
 
